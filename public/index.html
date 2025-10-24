@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Gifts - Открывай кейсы</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%233390ec' d='M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M8,10V12H11C10.33,12.08 9.69,12.23 9.06,12.46C8.67,12.62 8.31,12.84 8,13.13C7.67,12.86 7.31,12.63 6.91,12.47C6.29,12.23 5.65,12.08 5,12H4V10H8M13,10H20V12H18C17.34,12.08 16.7,12.23 16.07,12.46C15.68,12.62 15.32,12.84 15,13.13C14.67,12.86 14.31,12.63 13.91,12.47C13.29,12.23 12.65,12.08 12,12H13V10M6,14H8V17H6V14M16,14H18V17H16V14Z'/></svg>">
+    <style>
+        :root {
+            --primary: #3390ec;
+            --primary-dark: #1d6dc2;
+            --secondary: #2a2f3b;
+            --accent: #ff6b35;
+            --light: #f5f5f5;
+            --dark: #1a1d24;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--dark) 0%, #242832 100%);
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: rgba(42, 47, 59, 0.95);
+            padding: 15px 0;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .balance {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(51, 144, 236, 0.3);
+        }
+        
+        .user-profile {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .avatar:hover {
+            transform: scale(1.05);
+            border-color: var(--primary);
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 55px;
+            right: 0;
+            background: var(--secondary);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            width: 280px;
+            padding: 15px;
+            z-index: 100;
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .dropdown-menu.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .dropdown-item {
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+            margin-bottom: 5px;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .main-content {
+            padding: 30px 0 60px;
+        }
+        
+        .section-title {
+            margin-bottom: 25px;
+            font-size: 28px;
+            color: white;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, transparent 100%);
+            border-radius: 2px;
+        }
+        
+        .buttons-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(51, 144, 236, 0.3);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .cases-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .case-card {
+            background: linear-gradient(145deg, rgba(42, 47, 59, 0.8) 0%, rgba(32, 36, 46, 0.9) 100%);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+        
+        .case-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+        }
+        
+        .case-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .case-image {
+            height: 180px;
+            background: linear-gradient(135deg, var(--dark) 0%, #242832 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .case-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(51, 144, 236, 0.1) 0%, transparent 100%);
+        }
+        
+        .case-info {
+            padding: 20px;
+        }
+        
+        .case-name {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: white;
+        }
+        
+        .case-price {
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .case-items {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .item-preview {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .inventory-title {
+            margin: 40px 0 20px;
+            font-size: 24px;
+            color: white;
+        }
+        
+        .inventory-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 20px;
+        }
+        
+        .inventory-item {
+            background: linear-gradient(145deg, rgba(42, 47, 59, 0.8) 0%, rgba(32, 36, 46, 0.9) 100%);
+            border-radius: 12px;
+            padding: 20px 15px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .inventory-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .item-image {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+        }
+        
+        .item-name {
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: white;
+        }
+        
+        .item-value {
+            color: var(--accent);
+            font-size: 14px;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+        
+        .sell-btn {
+            background: linear-gradient(135deg, var(--accent) 0%, #e55a2b 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+        
+        .sell-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(255, 107, 53, 0.3);
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background: linear-gradient(145deg, var(--secondary) 0%, #242832 100%);
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .modal-title {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: white;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 16px;
+        }
+        
+        .captcha-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .captcha-code {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            letter-spacing: 5px;
+            font-size: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: 150px;
+            text-align: center;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .case-opening {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            display: none;
+        }
+        
+        .case-opening.active {
+            display: flex;
+        }
+        
+        .case-reward {
+            text-align: center;
+            animation: pulse 1.5s infinite;
+            background: linear-gradient(145deg, var(--secondary) 0%, #242832 100%);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .reward-image {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 25px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 70px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .reward-name {
+            font-size: 26px;
+            margin-bottom: 10px;
+            color: white;
+        }
+        
+        .reward-value {
+            color: var(--accent);
+            font-size: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .admin-panel {
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .admin-panel.active {
+            display: block;
+        }
+        
+        .admin-title {
+            color: var(--accent);
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+        
+        .admin-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .leaders-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: rgba(42, 47, 59, 0.5);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .leaders-table th {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 15px;
+            text-align: left;
+            color: white;
+        }
+        
+        .leaders-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .leader-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .leader-user {
+            display: flex;
+            align-items: center;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+        
+        .tab {
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @media (max-width: 768px) {
+            .buttons-container {
+                flex-direction: column;
+            }
+            
+            .cases-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="#3390ec">
+                        <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M8,10V12H11C10.33,12.08 9.69,12.23 9.06,12.46C8.67,12.62 8.31,12.84 8,13.13C7.67,12.86 7.31,12.63 6.91,12.47C6.29,12.23 5.65,12.08 5,12H4V10H8M13,10H20V12H18C17.34,12.08 16.7,12.23 16.07,12.46C15.68,12.62 15.32,12.84 15,13.13C14.67,12.86 14.31,12.63 13.91,12.47C13.29,12.23 12.65,12.08 12,12H13V10M6,14H8V17H6V14M16,14H18V17H16V14Z"/>
+                    </svg>
+                    Telegram Gifts
+                </div>
+                <div class="balance">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                        <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,10.5A1.5,1.5 0 0,1 13.5,12A1.5,1.5 0 0,1 12,13.5A1.5,1.5 0 0,1 10.5,12A1.5,1.5 0 0,1 12,10.5M7.5,10.5A1.5,1.5 0 0,1 9,12A1.5,1.5 0 0,1 7.5,13.5A1.5,1.5 0 0,1 6,12A1.5,1.5 0 0,1 7.5,10.5M16.5,10.5A1.5,1.5 0 0,1 18,12A1.5,1.5 0 0,1 16.5,13.5A1.5,1.5 0 0,1 15,12A1.5,1.5 0 0,1 16.5,10.5Z"/>
+                    </svg>
+                    <span id="balance">0</span>
+                </div>
+                <div class="user-profile">
+                    <div class="avatar" id="user-avatar">
+                        <span>U</span>
+                    </div>
+                    <div class="dropdown-menu" id="dropdown-menu">
+                        <div class="dropdown-item" id="change-avatar">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="#3390ec">
+                                <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,8.39C13.57,9.4 15.42,10 17.42,10C18.2,10 18.95,9.91 19.67,9.74C19.88,10.45 20,11.21 20,12C20,16.41 16.41,20 12,20C9,20 6.39,18.92 4.54,17.07C5.19,16.43 5.94,16 6.74,16C7.59,16 8.39,16.46 9,17.13C10.17,16.43 11.16,15.55 11.91,14.5C10.72,13.4 10,11.8 10,10C10,9.35 10.11,8.72 10.31,8.13C10.84,8.04 11.41,8 12,8C12.59,8 13.16,8.04 13.69,8.13C13.89,8.72 14,9.35 14,10C14,11.05 13.76,12.05 13.32,12.95C14.37,13.46 15.5,13.84 16.68,14.06C16.77,13.65 16.82,13.32 16.84,13C15.63,12.92 14.44,12.63 13.33,12.15C13.65,11.44 13.84,10.74 13.91,10C13.91,10 13.91,10 13.91,10C13.91,9.46 13.82,8.94 13.66,8.45C13.19,8.3 12.61,8.22 12,8.22C11.39,8.22 10.81,8.3 10.34,8.45C10.18,8.94 10.09,9.46 10.09,10C10.09,10.74 10.28,11.44 10.6,12.15C9.49,12.63 8.3,12.92 7.09,13C7.11,13.32 7.16,13.65 7.25,14.06C8.43,13.84 9.56,13.46 10.61,12.95C10.17,12.05 9.93,11.05 9.93,10C9.93,8.93 10.18,7.9 10.65,6.97C9.72,6.36 8.81,5.94 7.93,5.74C6.31,7.35 5.46,9.58 5.46,12C5.46,13.62 5.85,15.15 6.53,16.5C5.38,15.14 4.65,13.5 4.41,11.72C5.44,11.1 6.69,10.68 8.08,10.5C7.62,9.57 7.32,8.56 7.19,7.5C8.34,7.18 9.54,7 10.78,7C11.35,7 11.9,7.04 12.44,7.12C13.29,6.41 14.33,5.93 15.5,5.74C14.62,5.94 13.71,6.36 12.78,6.97C13.25,7.9 13.5,8.93 13.5,10C13.5,10.56 13.44,11.1 13.32,11.62C14.3,11.96 15.23,12.41 16.08,12.95C16.53,12.05 16.77,11.05 16.77,10C16.77,9.35 16.66,8.72 16.46,8.13C16.99,8.04 17.56,8 18.15,8C18.74,8 19.31,8.04 19.84,8.13C20.04,8.72 20.15,9.35 20.15,10C20.15,10.8 20.03,11.56 19.82,12.27C20.54,12.1 21.29,12.01 22.07,12.01C20.07,12.01 18.22,11.41 16.65,10.4C15.08,11.41 13.23,12.01 11.23,12.01C9.23,12.01 7.38,11.41 5.81,10.4C4.24,11.41 2.39,12.01 0.39,12.01C1.17,12.01 1.92,12.1 2.64,12.27C2.43,11.56 2.31,10.8 2.31,10C2.31,9.21 2.43,8.45 2.64,7.74C3.36,7.91 4.11,8 4.89,8C5.48,8 6.05,7.96 6.58,7.87C6.38,7.28 6.27,6.65 6.27,6C6.27,5.35 6.38,4.72 6.58,4.13C6.05,4.04 5.48,4 4.89,4C4.11,4 3.36,4.09 2.64,4.26C2.43,3.55 2.31,2.79 2.31,2C2.31,1.21 2.43,0.45 2.64,-0.26C3.36,-0.09 4.11,0 4.89,0C5.48,0 6.05,0.04 6.58,0.13C6.38,0.72 6.27,1.35 6.27,2C6.27,2.65 6.38,3.28 6.58,3.87C7.11,3.96 7.69,4.04 8.3,4.04C8.91,4.04 9.49,3.96 9.96,3.81C10.12,3.32 10.21,2.8 10.21,2.26C10.21,1.52 10.02,0.82 9.7,0.11C10.63,-0.5 11.54,-0.92 12.42,-1.12C13.3,-0.92 14.21,-0.5 15.14,0.11C14.82,0.82 14.63,1.52 14.63,2.26C14.63,2.8 14.72,3.32 14.88,3.81C15.35,3.96 15.93,4.04 16.54,4.04C17.15,4.04 17.73,3.96 18.2,3.81C18.36,3.32 18.45,2.8 18.45,2.26C18.45,1.52 18.26,0.82 17.94,0.11C18.87,-0.5 19.78,-0.92 20.66,-1.12C21.54,-0.92 22.45,-0.5 23.38,0.11C23.06,0.82 22.87,1.52 22.87,2.26C22.87,2.8 22.96,3.32 23.12,3.81C23.59,3.96 24.17,4.04 24.78,4.04C25.39,4.04 25.97,3.96 26.44,3.81C26.6,3.32 26.69,2.8 26.69,2.26C26.69,1.52 26.5,0.82 26.18,0.11C27.11,-0.5 28.02,-0.92 28.9,-1.12C29.78,-0.92 30.69,-0.5 31.62,0.11C31.3,0.82 31.11,1.52 31.11,2.26C31.11,2.8 31.2,3.32 31.36,3.81C31.83,3.96 32.41,4.04 33.02,4.04C33.63,4.04 34.21,3.96 34.68,3.81C34.84,3.32 34.93,2.8 34.93,2.26C34.93,1.52 34.74,0.82 34.42,0.11C35.35,-0.5 36.26,-0.92 37.14,-1.12C38.02,-0.92 38.93,-0.5 39.86,0.11C39.54,0.82 39.35,1.52 39.35,2.26C39.35,2.8 39.44,3.32 39.6,3.81C40.07,3.96 40.65,4.04 41.26,4.04C41.87,4.04 42.45,3.96 42.92,3.81C43.08,3.32 43.17,2.8 43.17,2.26C43.17,1.52 42.98,0.82 42.66,0.11C43.59,-0.5 44.5,-0.92 45.38,-1.12C46.26,-0.92 47.17,-0.5 48.1,0.11C47.78,0.82 47.59,1.52 47.59,2.26C47.59,2.8 47.68,3.32 47.84,3.81C48.31,3.96 48.89,4.04 49.5,4.04C50.11,4.04 50.69,3.96 51.16,3.81C51.32,3.32 51.41,2.8 51.41,2.26C51.41,1.52 51.22,0.82 50.9,0.11C51.83,-0.5 52.74,-0.92 53.62,-1.12C54.5,-0.92 55.41,-0.5 56.34,0.11C56.02,0.82 55.83,1.52 55.83,2.26C55.83,2.8 55.92,3.32 56.08,3.81C56.55,3.96 57.13,4.04 57.74,4.04C58.35,4.04 58.93,3.96 59.4,3.81C59.56,3.32 59.65,2.8 59.65,2.26C59.65,1.52 59.46,0.82 59.14,0.11C60.07,-0.5 60.98,-0.92 61.86,-1.12C62.74,-0.92 63.65,-0.5 64.58,0.11C64.26,0.82 64.07,1.52 64.07,2.26C64.07,2.8 64.16,3.32 64.32,3.81C64.79,3.96 65.37,4.04 65.98,4.04C66.59,4.04 67.17,3.96 67.64,3.81C67.8,3.32 67.89,2.8 67.89,2.26C67.89,1.52 67.7,0.82 67.38,0.11C68.31,-0.5 69.22,-0.92 70.1,-1.12C70.98,-0.92 71.89,-0.5 72.82,0.11C72.5,0.82 72.31,1.52 72.31,2.26C72.31,2.8 72.4,3.32 72.56,3.81C73.03,3.96 73.61,4.04 74.22,4.04C74.83,4.04 75.41,3.96 75.88,3.81C76.04,3.32 76.13,2.8 76.13,2.26C76.13,1.52 75.94,0.82 75.62,0.11C76.55,-0.5 77.46,-0.92 78.34,-1.12C79.22,-0.92 80.13,-0.5 81.06,0.11C80.74,0.82 80.55,1.52 80.55,2.26C80.55,2.8 80.64,3.32 80.8,3.81C81.27,3.96 81.85,4.04 82.46,4.04C83.07,4.04 83.65,3.96 84.12,3.81C84.28,3.32 84.37,2.8 84.37,2.26C84.37,1.52 84.18,0.82 83.86,0.11C84.79,-0.5 85.7,-0.92 86.58,-1.12C87.46,-0.92 88.37,-0.5 89.3,0.11C88.98,0.82 88.79,1.52 88.79,2.26C88.79,2.8 88.88,3.32 89.04,3.81C89.51,3.96 90.09,4.04 90.7,4.04C91.31,4.04 91.89,3.96 92.36,3.81C92.52,3.32 92.61,2.8 92.61,2.26C92.61,1.52 92.42,0.82 92.1,0.11C93.03,-0.5 93.94,-0.92 94.82,-1.12C95.7,-0.92 96.61,-0.5 97.54,0.11C97.22,0.82 97.03,1.52 97.03,2.26C97.03,2.8 97.12,3.32 97.28,3.81C97.75,3.96 98.33,4.04 98.94,4.04C99.55,4.04 100.13,3.96 100.6,3.81C100.76,3.32 100.85,2.8 100.85,2.26C100.85,1.52 100.66,0.82 100.34,0.11C101.27,-0.5 102.18,-0.92 103.06,-1.12C103.94,-0.92 104.85,-0.5 105.78,0.11C105.46,0.82 105.27,1.52 105.27,2.26C105.27,2.8 105.36,3.32 105.52,3.81C105.99,3.96 106.57,4.04 107.18,4.04C107.79,4.04 108.37,3.96 108.84,3.81C109,3.32 109.09,2.8 109.09,2.26C109.09,1.52 108.9,0.82 108.58,0.11C109.51,-0.5 110.42,-0.92 111.3,-1.12C112.18,-0.92 113.09,-0.5 114.02,0.11C113.7,0.82 113.51,1.52 113.51,2.26C113.51,2.8 113.6,3.32 113.76,3.81C114.23,3.96 114.81,4.04 115.42,4.04C116.03,4.04 116.61,3.96 117.08,3.81C117.24,3.32 117.33,2.8 117.33,2.26C117.33,1.52 117.14,0.82 116.82,0.11C117.75,-0.5 118.66,-0.92 119.54,-1.12C120.42,-0.92 121.33,-0.5 122.26,0.11C121.94,0.82 121.75,1.52 121.75,2.26C121.75,2.8 121.84,3.32 122,3.81C122.47,3.96 123.05,4.04 123.66,4.04C124.27,4.04 124.85,3.96 125.32,3.81C125.48,3.32 125.57,2.8 125.57,2.26C125.57,1.52 125.38,0.82 125.06,0.11C125.99,-0.5 126.9,-0.92 127.78,-1.12C128.66,-0.92 129.57,-0.5 130.5,0.11C130.18,0.82 129.99,1.52 129.99,2.26C129.99,2.8 130.08,3.32 130.24,3.81C130.71,3.96 131.29,4.04 131.9,4.04C132.51,4.04 133.09,3.96 133.56,3.81C133.72,3.32 133.81,2.8 133.81,2.26C133.81,1.52 133.62,0.82 133.3,0.11C134.23,-0.5 135.14,-0.92 136.02,-1.12C136.9,-0.92 137.81,-0.5 138.74,0.11C138.42,0.82 138.23,1.52 138.23,2.26C138.23,2.8 138.32,3.32 138.48,3.81C138.95,3.96 139.53,4.04 140.14,4.04C140.75,4.04 141.33,3.96 141.8,3.81C141.96,3.32 142.05,2.8 142.05,2.26C142.05,1.52 141.86,0.82 141.54,0.11C142.47,-0.5 143.38,-0.92 144.26,-1.12C145.14,-0.92 146.05,-0.5 146.98,0.11C146.66,0.82 146.47,1.52 146.47,2.26C146.47,2.8 146.56,3.32 146.72,3.81C147.19,3.96 147.77,4.04 148.38,4.04C148.99,4.04 149.57,3.96 150.04,3.81C150.2,3.32 150.29,2.8 150.29,2.26C150.29,1.52 150.1,0.82 149.78,0.11C150.71,-0.5 151.62,-0.92 152.5,-1.12C153.38,-0.92 154.29,-0.5 155.22,0.11C154.9,0.82 154.71,1.52 154.71,2.26C154.71,2.8 154.8,3.32 154.96,3.81C155.43,3.96 156.01,4.04 156.62,4.04C157.23,4.04 157.81,3.96 158.28,3.81C158.44,3.32 158.53,2.8 158.53,2.26C158.53,1.52 158.34,0.82 158.02,0.11C158.95,-0.5 159.86,-0.92 160.74,-1.12C161.62,-0.92 162.53,-0.5 163.46,0.11C163.14,0.82 162.95,1.52 162.95,2.26C162.95,2.8 163.04,3.32 163.2,3.81C163.67,3.96 164.25,4.04 164.86,4.04C165.47,4.04 166.05,3.96 166.52,3.81C166.68,3.32 166.77,2.8 166.77,2.26C166.77,1.52 166.58,0.82 166.26,0.11C167.19,-0.5 168.1,-0.92 168.98,-1.12C169.86,-0.92 170.77,-0.5 171.7,0.11C171.38,0.82 171.19,1.52 171.19,2.26C171.19,2.8 171.28,3.32 171.44,3.81C171.91,3.96 172.49,4.04 173.1,4.04C173.71,4.04 174.29,3.96 174.76,3.81C174.92,3.32 175.01,2.8 175.01,2.26C175.01,1.52 174.82,0.82 174.5,0.11C175.43,-0.5 176.34,-0.92 177.22,-1.12C178.1,-0.92 179.01,-0.5 179.94,0.11C179.62,0.82 179.43,1.52 179.43,2.26C179.43,2.8 179.52,3.32 179.68,3.81C180.15,3.96 180.73,4.04 181.34,4.04C181.95,4.04 182.53,3.96 183,3.81C183.16,3.32 183.25,2.8 183.25,2.26C183.25,1.52 183.06,0.82 182.74,0.11C183.67,-0.5 184.58,-0.92 185.46,-1.12C186.34,-0.92 187.25,-0.5 188.18,0.11C187.86,0.82 187.67,1.52 187.67,2.26C187.67,2.8 187.76,3.32 187.92,3.81C188.39,3.96 188.97,4.04 189.58,4.04C190.19,4.04 190.77,3.96 191.24,3.81C191.4,3.32 191.49,2.8 191.49,2.26C191.49,1.52 191.3,0.82 190.98,0.11C191.91,-0.5 192.82,-0.92 193.7,-1.12C194.58,-0.92 195.49,-0.5 196.42,0.11C196.1,0.82 195.91,1.52 195.91,2.26C195.91,2.8 196,3.32 196.16,3.81C196.63,3.96 197.21,4.04 197.82,4.04C198.43,4.04 199.01,3.96 199.48,3.81C199.64,3.32 199.73,2.8 199.73,2.26C199.73,1.52 199.54,0.82 199.22,0.11C200.15,-0.5 201.06,-0.92 201.94,-1.12C202.82,-0.92 203.73,-0.5 204.66,0.11C204.34,0.82 204.15,1.52 204.15,2.26C204.15,2.8 204.24,3.32 204.4,3.81C204.87,3.96 205.45,4.04 206.06,4.04C206.67,4.04 207.25,3.96 207.72,3.81C207.88,3.32 207.97,2.8 207.97,2.26C207.97,1.52 207.78,0.82 207.46,0.11C208.39,-0.5 209.3,-0.92 210.18,-1.12C211.06,-0.92 211.97,-0.5 212.9,0.11C212.58,0.82 212.39,1.52 212.39,2.26C212.39,2.8 212.48,3.32 212.64,3.81C213.11,3.96 213.69,4.04 214.3,4.04C214.91,4.04 215.49,3.96 215.96,3.81C216.12,3.32 216.21,2.8 216.21,2.26C216.21,1.52 216.02,0.82 215.7,0.11C216.63,-0.5 217.54,-0.92 218.42,-1.12C219.3,-0.92 220.21,-0.5 221.14,0.11C220.82,0.82 220.63,1.52 220.63,2.26C220.63,2.8 220.72,3.32 220.88,3.81C221.35,3.96 221.93,4.04 222.54,4.04C223.15,4.04 223.73,3.96 224.2,3.81C224.36,3.32 224.45,2.8 224.45,2.26C224.45,1.52 224.26,0.82 223.94,0.11C224.87,-0.5 225.78,-0.92 226.66,-1.12C227.54,-0.92 228.45,-0.5 229.38,0.11C229.06,0.82 228.87,1.52 228.87,2.26C228.87,2.8 228.96,3.32 229.12,3.81C229.59,3.96 230.17,4.04 230.78,4.04C231.39,4.04 231.97,3.96 232.44,3.81C232.6,3.32 232.69,2.8 232.69,2.26C232.69,1.52 232.5,0.82 232.18,0.11C233.11,-0.5 234.02,-0.92 234.9,-1.12C235.78,-0.92 236.69,-0.5 237.62,0.11C237.3,0.82 237.11,1.52 237.11,2.26C237.11,2.8 237.2,3.32 237.36,3.81C237.83,3.96 238.41,4.04 239.02,4.04C239.63,4.04 240.21,3.96 240.68,3.81C240.84,3.32 240.93,2.8 240.93,2.26C240.93,1.52 240.74,0.82 240.42,0.11C241.35,-0.5 242.26,-0.92 243.14,-1.12C244.02,-0.92 244.93,-0.5 245.86,0.11C245.54,0.82 245.35,1.52 245.35,2.26C245.35,2.8 245.44,3.32 245.6,3.81C246.07,3.96 246.65,4.04 247.26,4.04C247.87,4.04 248.45,3.96 248.92,3.81C249.08,3.32 249.17,2.8 249.17,2.26C249.17,1.52 248.98,0.82 248.66,0.11C249.59,-0.5 250.5,-0.92 251.38,-1.12C252.26,-0.92 253.17,-0.5 254.1,0.11C253.78,0.82 253.59,1.52 253.59,2.26C253.59,2.8 253.68,3.32 253.84,3.81C254.31,3.96 254.89,4.04 255.5,4.04C256.11,4.04 256.69,3.96 257.16,3.81C257.32,3.32 257.41,2.8 257.41,2.26C257.41,1.52 257.22,0.82 256.9,0.11C257.83,-0.5 258.74,-0.92 259.62,-1.12C260.5,-0.92 261.41,-0.5 262.34,0.11C262.02,0.82 261.83,1.52 261.83,2.26C261.83,2.8 261.92,3.32 262.08,3.81C262.55,3.96 263.13,4.04 263.74,4.04C264.35,4.04 264.93,3.96 265.4,3.81C265.56,3.32 265.65,2.8 265.65,2.26C265.65,1.52 265.46,0.82 265.14,0.11C266.07,-0.5 266.98,-0.92 267.86,-1.12C268.74,-0.92 269.65,-0.5 270.58,0.11C270.26,0.82 270.07,1.52 270.07,2.26C270.07,2.8 270.16,3.32 270.32,3.81C270.79,3.96 271.37,4.04 271.98,4.04C272.59,4.04 273.17,3.96 273.64,3.81C273.8,3.32 273.89,2.8 273.89,2.26C273.89,1.52 273.7,0.82 273.38,0.11C274.31,-0.5 275.22,-0.92 276.1,-1.12C276.98,-0.92 277.89,-0.5 278.82,0.11C278.5,0.82 278.31,1.52 278.31,2.26C278.31,2.8 278.4,3.32 278.56,3.81C279.03,3.96 279.61,4.04 280.22,4.04C280.83,4.04 281.41,3.96 281.88,3.81C282.04,3.32 282.13,2.8 282.13,2.26C282.13,1.52 281.94,0.82 281.62,0.11C282.55,-0.5 283.46,-0.92 284.34,-1.12C285.22,-0.92 286.13,-0.5 287.06,0.11C286.74,0.82 286.55,1.52 286.55,2.26C286.55,2.8 286.64,3.32 286.8,3.81C287.27,3.96 287.85,4.04 288.46,4.04C289.07,4.04 289.65,3.96 290.12,3.81C290.28,3.32 290.37,2.8 290.37,2.26C290.37,1.52 290.18,0.82 289.86,0.11C290.79,-0.5 291.7,-0.92 292.58,-1.12C293.46,-0.92 294.37,-0.5 295.3,0.11C294.98,0.82 294.79,1.52 294.79,2.26C294.79,2.8 294.88,3.32 295.04,3.81C295.51,3.96 296.09,4.04 296.7,4.04C297.31,4.04 297.89,3.96 298.36,3.81C298.52,3.32 298.61,2.8 298.61,2.26C298.61,1.52 298.42,0.82 298.1,0.11C299.03,-0.5 299.94,-0.92 300.82,-1.12C301.7,-0.92 302.61,-0.5 303.54,0.11C303.22,0.82 303.03,1.52 303.03,2.26C303.03,2.8 303.12,3.32 303.28,3.81C303.75,3.96 304.33,4.04 304.94,4.04C305.55,4.04 306.13,3.96 306.6,3.81C306.76,3.32 306.85,2.8 306.85,2.26C306.85,1.52 306.66,0.82 306.34,0.11C307.27,-0.5 308.18,-0.92 309.06,-1.12C309.94,-0.92 310.85,-0.5 311.78,0.11C311.46,0.82 311.27,1.52 311.27,2.26C311.27,2.8 311.36,3.32 311.52,3.81C311.99,3.96 312.57,4.04 313.18,4.04C313.79,4.04 314.37,3.96 314.84,3.81C314.84,3.81 314.84,3.81 314.84,3.81Z"/>
+                    </svg>
+                    Сменить аватар
+                </div>
+                <div class="dropdown-item" id="promo-code">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#3390ec">
+                        <path d="M20,6H4V4H20V6M20,18V20H4V18H20M20,12V14H4V12H20M9,10A2,2 0 0,1 11,12A2,2 0 0,1 9,14A2,2 0 0,1 7,12A2,2 0 0,1 9,10M9,16A2,2 0 0,1 11,18A2,2 0 0,1 9,20A2,2 0 0,1 7,18A2,2 0 0,1 9,16M15,11H17V17H15V11M15,7H17V9H15V7Z"/>
+                    </svg>
+                    Промокод
+                </div>
+                <div class="dropdown-item" id="best-drop">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#3390ec">
+                        <path d="M19,5H17V3H7V5H5A2,2 0 0,0 3,7V8A2,2 0 0,0 5,10V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V10A2,2 0 0,0 21,8V7A2,2 0 0,0 19,5M7,19V10H17V19H7M5,8V7H19V8H5M8,13H16V15H8V13Z"/>
+                    </svg>
+                    Лучшее падение
+                </div>
+                <div class="dropdown-item" id="statistics">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#3390ec">
+                        <path d="M22,21H2V3H4V19H6V10H10V19H12V6H16V19H18V14H22V21Z"/>
+                    </svg>
+                    Статистика
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <h1 class="section-title">Кейсы с подарками из Telegram</h1>
+            
+            <div class="buttons-container">
+                <button class="btn btn-primary" id="cases-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                        <path d="M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94 12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12 3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06 12.57,2.18L20.47,6.62C20.79,6.79 21,7.12 21,7.5V16.5M12,4.15L5,8.09V15.91L12,19.85L19,15.91V8.09L12,4.15Z"/>
+                    </svg>
+                    Кейсы
+                </button>
+                <button class="btn btn-secondary" id="refresh-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                        <path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/>
+                    </svg>
+                    Обновить
+                </button>
+                <button class="btn btn-secondary" id="leaders-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                        <path d="M15.5,12C18,12 20,14 20,16.5C20,17.38 19.75,18.21 19.31,18.9L22.39,22L21,23.39L17.88,20.32C17.19,20.75 16.37,21 15.5,21C13,21 11,19 11,16.5C11,14 13,12 15.5,12M15.5,14A2.5,2.5 0 0,0 13,16.5A2.5,2.5 0 0,0 15.5,19A2.5,2.5 0 0,0 18,16.5A2.5,2.5 0 0,0 15.5,14M10,4A4,4 0 0,1 14,8C14,8.91 13.69,9.75 13.18,10.43C12.32,10.75 11.55,11.26 10.91,11.9L10,12A4,4 0 0,1 6,8A4,4 0 0,1 10,4M2,20V18C2,15.88 5.31,14.14 9.5,14C9.18,14.78 9,15.62 9,16.5C9,17.79 9.38,19 10,20H2Z"/>
+                    </svg>
+                    Лидеры
+                </button>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="cases">Кейсы</div>
+                <div class="tab" data-tab="leaders">Таблица лидеров</div>
+            </div>
+            
+            <div class="tab-content active" id="cases-tab">
+                <div class="admin-panel" id="admin-panel">
+                    <h3 class="admin-title">Панель администратора</h3>
+                    <div class="admin-controls">
+                        <input type="text" class="form-control" id="username-input" placeholder="Имя пользователя">
+                        <input type="number" class="form-control" id="balance-input" placeholder="Баланс">
+                        <button class="btn btn-primary" id="set-balance-btn">Установить баланс</button>
+                    </div>
+                </div>
+                
+                <h2 class="section-title">Бесплатные кейсы</h2>
+                <div class="cases-container">
+                    <div class="case-card" data-case="daily">
+                        <div class="case-image">
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="#3390ec">
+                                <path d="M5,4H19A2,2 0 0,1 21,6V18A2,2 0 0,1 19,20H5A2,2 0 0,1 3,18V6A2,2 0 0,1 5,4M5,8V12H11V8H5M13,8V12H19V8H13M5,14V18H11V14H5M13,14V18H19V14H13Z"/>
+                            </svg>
+                        </div>
+                        <div class="case-info">
+                            <div class="case-name">Ежедневный кейс</div>
+                            <div class="case-price">Бесплатно</div>
+                            <div class="case-items">
+                                <div class="item-preview">💪</div>
+                                <div class="item-preview">📅</div>
+                                <div class="item-preview">🧹</div>
+                            </div>
+                            <button class="btn btn-primary open-case-btn" data-case="daily">Открыть</button>
+                        </div>
+                    </div>
+                    
+                    <div class="case-card" data-case="bomj">
+                        <div class="case-image">
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="#3390ec">
+                                <path d="M12,3A4,4 0 0,1 16,7A4,4 0 0,1 12,11A4,4 0 0,1 8,7A4,4 0 0,1 12,3M12,13C14.67,13 20,14.33 20,17V20H4V17C4,14.33 9.33,13 12,13Z"/>
+                            </svg>
+                        </div>
+                        <div class="case-info">
+                            <div class="case-name">Бомжик</div>
+                            <div class="case-price">Бесплатно</div>
+                            <div class="case-items">
+                                <div class="item-preview">❤️</div>
+                                <div class="item-preview">🧸</div>
+                                <div class="item-preview">🌹</div>
+                                <div class="item-preview">🚀</div>
+                            </div>
+                            <button class="btn btn-primary open-case-btn" data-case="bomj">Открыть</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2 class="section-title">Платные кейсы</h2>
+                <div class="cases-container">
+                    <div class="case-card" data-case="durov">
+                        <div class="case-image">
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="#3390ec">
+                                <path d="M18.71,19.5C17.88,20.74 17,21.95 15.66,21.97C14.32,22 13.89,21.18 12.37,21.18C10.84,21.18 10.37,21.95 9.1,22C7.79,22.05 6.8,20.68 5.96,19.47C4.25,17 2.94,12.45 4.7,9.39C5.57,7.87 7.13,6.91 8.82,6.88C10.1,6.86 11.32,7.75 12.11,7.75C12.89,7.75 14.37,6.68 15.92,6.84C16.57,6.87 18.39,7.1 19.56,8.82C19.47,8.88 17.39,10.1 17.41,12.63C17.44,15.65 20.06,16.66 20.09,16.67C20.06,16.74 19.67,18.11 18.71,19.5M13,3.5C13.73,2.67 14.94,2.04 15.94,2C16.07,3.17 15.6,4.35 14.9,5.19C14.21,6.04 13.07,6.7 11.95,6.61C11.8,5.46 12.36,4.26 13,3.5Z"/>
+                            </svg>
+                        </div>
+                        <div class="case-info">
+                            <div class="case-name">Durov Case</div>
+                            <div class="case-price">100 ★</div>
+                            <div class="case-items">
+                                <div class="item-preview">🐸</div>
+                                <div class="item-preview">💨</div>
+                                <div class="item-preview">🎩</div>
+                                <div class="item-preview">💄</div>
+                            </div>
+                            <button class="btn btn-primary open-case-btn" data-case="durov">Открыть за 100 ★</button>
+                        </div>
+                    </div>
+                    
+                    <div class="case-card" data-case="bayrex">
+                        <div class="case-image">
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="#3390ec">
+                                <path d="M19,3C20.1,3 21,3.9 21,5V19C21,20.1 20.1,21 19,21H5C3.89,21 3,20.1 3,19V5C3,3.9 3.9,3 5,3H19M12,8C9.79,8 8,9.79 8,12C8,14.21 9.79,16 12,16C14.21,16 16,14.21 16,12C16,9.79 14.21,8 12,8Z"/>
+                            </svg>
+                        </div>
+                        <div class="case-info">
+                            <div class="case-name">BayRex Case</div>
+                            <div class="case-price">150 ★</div>
+                            <div class="case-items">
+                                <div class="item-preview">🐸</div>
+                                <div class="item-preview">💨</div>
+                                <div class="item-preview">🎩</div>
+                                <div class="item-preview">💄</div>
+                            </div>
+                            <button class="btn btn-primary open-case-btn" data-case="bayrex">Открыть за 150 ★</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2 class="inventory-title">Ваши подарки</h2>
+                <div class="inventory-container" id="inventory"></div>
+            </div>
+            
+            <div class="tab-content" id="leaders-tab">
+                <h2 class="section-title">Таблица лидеров</h2>
+                <table class="leaders-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Игрок</th>
+                            <th>Баланс</th>
+                            <th>Открыто кейсов</th>
+                            <th>Лучший предмет</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaders-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="registration-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="close-registration">&times;</button>
+            <h2 class="modal-title">Регистрация</h2>
+            <form id="registration-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="username">Имя пользователя</label>
+                    <input type="text" class="form-control" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <input type="password" class="form-control" id="password" required>
+                </div>
+                <div class="captcha-container">
+                    <div class="captcha-code" id="captcha-code">A1B2C3</div>
+                    <input type="text" class="form-control captcha-input" id="captcha-input" placeholder="Введите капчу" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" id="cancel-registration">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="case-opening" id="case-opening">
+        <div class="case-reward">
+            <div class="reward-image" id="reward-image">🎁</div>
+            <div class="reward-name" id="reward-name">Mighty Arm</div>
+            <div class="reward-value" id="reward-value">Цена: 10 ★</div>
+            <button class="btn btn-primary" id="close-case">Закрыть</button>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin + '/api';
+        let user = null;
+        let token = localStorage.getItem('telegramGiftsToken');
+        let casesData = null;
+
+        // DOM Elements
+        const elements = {
+            balance: document.getElementById('balance'),
+            userAvatar: document.getElementById('user-avatar'),
+            dropdownMenu: document.getElementById('dropdown-menu'),
+            registrationModal: document.getElementById('registration-modal'),
+            registrationForm: document.getElementById('registration-form'),
+            inventoryContainer: document.getElementById('inventory'),
+            adminPanel: document.getElementById('admin-panel'),
+            leadersBody: document.getElementById('leaders-body'),
+            tabs: document.querySelectorAll('.tab'),
+            tabContents: document.querySelectorAll('.tab-content')
+        };
+
+        async function apiCall(endpoint, method = 'GET', data = null) {
+            const options = {
+                method,
+                headers: { 'Content-Type': 'application/json' }
+            };
+
+            if (token) {
+                options.headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+
+            const response = await fetch(`${API_BASE}${endpoint}`, options);
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || 'Ошибка сервера');
+            }
+
+            return result;
+        }
+
+        async function initApp() {
+            if (token) {
+                try {
+                    user = await apiCall('/user');
+                    updateUI();
+                    loadCases();
+                    loadLeaders();
+                } catch (error) {
+                    localStorage.removeItem('telegramGiftsToken');
+                    showRegistrationModal();
+                }
+            } else {
+                showRegistrationModal();
+            }
+        }
+
+        function showRegistrationModal() {
+            elements.registrationModal.classList.add('active');
+            generateCaptcha();
+        }
+
+        async function generateCaptcha() {
+            try {
+                const data = await apiCall('/captcha');
+                document.getElementById('captcha-code').textContent = data.captcha;
+            } catch (error) {
+                console.error('Ошибка загрузки капчи:', error);
+            }
+        }
+
+        async function registerUser(email, username, password, captchaInput) {
+            const captcha = document.getElementById('captcha-code').textContent;
+            const result = await apiCall('/register', 'POST', {
+                email, username, password, captchaInput, captcha
+            });
+
+            token = result.token;
+            user = result.user;
+            localStorage.setItem('telegramGiftsToken', token);
+            updateUI();
+            loadLeaders();
+            elements.registrationModal.classList.remove('active');
+            return result;
+        }
+
+        async function loadCases() {
+            try {
+                casesData = await apiCall('/cases');
+            } catch (error) {
+                console.error('Ошибка загрузки кейсов:', error);
+            }
+        }
+
+        async function loadLeaders() {
+            try {
+                const leaders = await apiCall('/leaders');
+                renderLeaders(leaders);
+            } catch (error) {
+                console.error('Ошибка загрузки лидеров:', error);
+            }
+        }
+
+        async function openCase(caseType) {
+            try {
+                const result = await apiCall('/open-case', 'POST', { caseType });
+                user.balance = result.newBalance;
+                user.casesOpened = result.casesOpened;
+                user.inventory.push(result.reward);
+                updateUI();
+                loadLeaders();
+                showRewardAnimation(result.reward);
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        async function sellItem(itemId) {
+            try {
+                const result = await apiCall('/sell-item', 'POST', { itemId });
+                user.balance = result.newBalance;
+                user.inventory = user.inventory.filter(item => item.id !== itemId);
+                updateUI();
+                loadLeaders();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        async function changeAvatar(avatarUrl) {
+            try {
+                await apiCall('/change-avatar', 'POST', { avatarUrl });
+                user.avatar = avatarUrl;
+                updateUI();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        async function activatePromoCode(promoCode) {
+            try {
+                const result = await apiCall('/activate-promo', 'POST', { promoCode });
+                user.balance = result.newBalance;
+                updateUI();
+                loadLeaders();
+                alert(result.message);
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        async function setUserBalance(targetUsername, newBalance) {
+            try {
+                const result = await apiCall('/admin/set-balance', 'POST', { targetUsername, newBalance });
+                if (targetUsername === user.username) {
+                    user.balance = parseInt(newBalance);
+                    updateUI();
+                }
+                loadLeaders();
+                alert(result.message);
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        function updateUI() {
+            if (!user) return;
+            
+            elements.balance.textContent = user.balance;
+            
+            if (user.avatar) {
+                elements.userAvatar.innerHTML = `<img src="${user.avatar}" alt="Avatar">`;
+            } else {
+                elements.userAvatar.innerHTML = `<span>${user.username.charAt(0).toUpperCase()}</span>`;
+            }
+            
+            if (user.isAdmin) {
+                elements.adminPanel.classList.add('active');
+            }
+            
+            renderInventory();
+        }
+
+        function renderInventory() {
+            elements.inventoryContainer.innerHTML = '';
+            
+            if (!user.inventory || user.inventory.length === 0) {
+                elements.inventoryContainer.innerHTML = 
+                    '<p style="grid-column: 1 / -1; text-align: center; padding: 20px; color: rgba(255,255,255,0.5);">У вас пока нет подарков. Откройте кейсы, чтобы получить подарки!</p>';
+                return;
+            }
+            
+            user.inventory.forEach((item) => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'inventory-item';
+                itemElement.innerHTML = `
+                    <div class="item-image">${item.emoji}</div>
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-value">${item.value} ★</div>
+                    <button class="sell-btn" data-id="${item.id}">Продать за ${item.value} ★</button>
+                `;
+                elements.inventoryContainer.appendChild(itemElement);
+            });
+            
+            document.querySelectorAll('.sell-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemId = this.getAttribute('data-id');
+                    sellItem(itemId);
+                });
+            });
+        }
+
+        function renderLeaders(leaders) {
+            elements.leadersBody.innerHTML = '';
+            
+            leaders.forEach((leader, index) => {
+                const row = document.createElement('tr');
+                const isCurrentUser = user && leader.username === user.username;
+                
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>
+                        <div class="leader-user">
+                            <div class="leader-avatar">${leader.username.charAt(1).toUpperCase()}</div>
+                            ${leader.username} ${isCurrentUser ? '<strong>(Вы)</strong>' : ''}
+                        </div>
+                    </td>
+                    <td>${leader.balance} ★</td>
+                    <td>${leader.casesOpened}</td>
+                    <td>${leader.bestItem}</td>
+                `;
+                
+                if (isCurrentUser) {
+                    row.style.backgroundColor = 'rgba(51, 144, 236, 0.1)';
+                }
+                
+                elements.leadersBody.appendChild(row);
+            });
+        }
+
+        function showRewardAnimation(reward) {
+            document.getElementById('reward-image').textContent = reward.emoji;
+            document.getElementById('reward-name').textContent = reward.name;
+            document.getElementById('reward-value').textContent = `Цена: ${reward.value} ★`;
+            document.getElementById('case-opening').classList.add('active');
+        }
+
+        // Event Listeners
+        document.getElementById('registration-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const captchaInput = document.getElementById('captcha-input').value;
+            
+            try {
+                await registerUser(email, username, password, captchaInput);
+            } catch (error) {
+                alert(error.message);
+                generateCaptcha();
+            }
+        });
+
+        document.querySelectorAll('.open-case-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const caseType = this.getAttribute('data-case');
+                openCase(caseType);
+            });
+        });
+
+        document.getElementById('change-avatar').addEventListener('click', function() {
+            const avatarUrl = prompt('Введите URL вашего аватара:');
+            if (avatarUrl) changeAvatar(avatarUrl);
+        });
+
+        document.getElementById('promo-code').addEventListener('click', function() {
+            const promoCode = prompt('Введите промокод:');
+            if (promoCode) activatePromoCode(promoCode);
+        });
+
+        document.getElementById('set-balance-btn').addEventListener('click', function() {
+            const targetUsername = document.getElementById('username-input').value;
+            const newBalance = document.getElementById('balance-input').value;
+            if (targetUsername && newBalance) {
+                setUserBalance(targetUsername, newBalance);
+            } else {
+                alert('Заполните все поля');
+            }
+        });
+
+        document.getElementById('best-drop').addEventListener('click', function() {
+            if (!user.inventory.length) {
+                alert('У вас пока нет подарков!');
+                return;
+            }
+            const bestItem = user.inventory.reduce((best, current) => 
+                current.value > best.value ? current : best, user.inventory[0]);
+            alert(`Ваш лучший подарок: ${bestItem.name} (${bestItem.emoji}) стоимостью ${bestItem.value} ★`);
+        });
+
+        document.getElementById('statistics').addEventListener('click', function() {
+            const totalValue = user.inventory.reduce((sum, item) => sum + item.value, 0);
+            alert(`Статистика:\nОткрыто кейсов: ${user.casesOpened}\nКоличество подарков: ${user.inventory.length}\nОбщая стоимость: ${totalValue} ★`);
+        });
+
+        document.getElementById('close-registration').addEventListener('click', () => {
+            elements.registrationModal.classList.remove('active');
+        });
+
+        document.getElementById('cancel-registration').addEventListener('click', () => {
+            elements.registrationModal.classList.remove('active');
+        });
+
+        document.getElementById('close-case').addEventListener('click', () => {
+            document.getElementById('case-opening').classList.remove('active');
+        });
+
+        elements.userAvatar.addEventListener('click', () => {
+            elements.dropdownMenu.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.user-profile')) {
+                elements.dropdownMenu.classList.remove('active');
+            }
+        });
+
+        elements.tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                elements.tabs.forEach(t => t.classList.remove('active'));
+                elements.tabContents.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+
+        document.getElementById('refresh-btn').addEventListener('click', () => {
+            location.reload();
+        });
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
