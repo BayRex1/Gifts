@@ -14,6 +14,13 @@ const JWT_SECRET = process.env.JWT_SECRET || 'telegram-gifts-secret-key-render';
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
+app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
+
+// Middleware для логирования
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+    next();
+});
 
 // Файлы для хранения данных
 const DATA_DIR = path.join(__dirname, 'data');
@@ -66,42 +73,46 @@ const casesData = {
     daily: {
         name: "Ежедневный кейс",
         price: 0,
+        image: "/images/cases/daily-case.png",
         items: [
-            { id: 1, name: "Mighty Arm", emoji: "💪", value: 10 },
-            { id: 2, name: "Desk Calendar", emoji: "📅", value: 15 },
-            { id: 3, name: "Flying Broom", emoji: "🧹", value: 20 }
+            { id: 1, name: "Mighty Arm", image: "/images/items/mighty-arm.png", value: 10 },
+            { id: 2, name: "Desk Calendar", image: "/images/items/desk-calendar.png", value: 15 },
+            { id: 3, name: "Flying Broom", image: "/images/items/flying-broom.png", value: 20 }
         ]
     },
     bomj: {
         name: "Бомжик",
         price: 0,
+        image: "/images/cases/bomj-case.png",
         items: [
-            { id: 4, name: "Сердечко", emoji: "❤️", value: 5 },
-            { id: 5, name: "Мишка", emoji: "🧸", value: 8 },
-            { id: 6, name: "Роза", emoji: "🌹", value: 12 },
-            { id: 7, name: "Ракета", emoji: "🚀", value: 18 },
-            { id: 8, name: "Цветы", emoji: "💐", value: 15 },
-            { id: 9, name: "Алмаз", emoji: "💎", value: 25 }
+            { id: 4, name: "Сердечко", image: "/images/items/heart.png", value: 5 },
+            { id: 5, name: "Мишка", image: "/images/items/bear.png", value: 8 },
+            { id: 6, name: "Роза", image: "/images/items/rose.png", value: 12 },
+            { id: 7, name: "Ракета", image: "/images/items/rocket.png", value: 18 },
+            { id: 8, name: "Цветы", image: "/images/items/flowers.png", value: 15 },
+            { id: 9, name: "Алмаз", image: "/images/items/diamond.png", value: 25 }
         ]
     },
     durov: {
         name: "Durov Case",
         price: 100,
+        image: "/images/cases/durov-case.png",
         items: [
-            { id: 10, name: "Plush Pepe (gold)", emoji: "🐸", value: 50 },
-            { id: 11, name: "Vintage Sigar", emoji: "💨", value: 40 },
-            { id: 12, name: "Top Hat", emoji: "🎩", value: 35 },
-            { id: 13, name: "Perfume Bottle", emoji: "💄", value: 45 }
+            { id: 10, name: "Plush Pepe (gold)", image: "/images/items/pepe.png", value: 50 },
+            { id: 11, name: "Vintage Sigar", image: "/images/items/sigar.png", value: 40 },
+            { id: 12, name: "Top Hat", image: "/images/items/hat.png", value: 35 },
+            { id: 13, name: "Perfume Bottle", image: "/images/items/perfume.png", value: 45 }
         ]
     },
     bayrex: {
         name: "BayRex Case",
         price: 150,
+        image: "/images/cases/bayrex-case.png",
         items: [
-            { id: 14, name: "Plush Pepe (gold)", emoji: "🐸", value: 50 },
-            { id: 15, name: "Vintage Sigar", emoji: "💨", value: 40 },
-            { id: 16, name: "Top Hat", emoji: "🎩", value: 35 },
-            { id: 17, name: "Perfume Bottle", emoji: "💄", value: 45 }
+            { id: 14, name: "Plush Pepe (gold)", image: "/images/items/pepe.png", value: 50 },
+            { id: 15, name: "Vintage Sigar", image: "/images/items/sigar.png", value: 40 },
+            { id: 16, name: "Top Hat", image: "/images/items/hat.png", value: 35 },
+            { id: 17, name: "Perfume Bottle", image: "/images/items/perfume.png", value: 45 }
         ]
     }
 };
@@ -125,6 +136,17 @@ function authenticateToken(req, res, next) {
 }
 
 // API Routes
+
+// Health check
+app.get('/health', (req, res) => {
+    res.json({ 
+        status: 'OK', 
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        memory: process.memoryUsage()
+    });
+});
+
 app.get('/api/captcha', (req, res) => {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let captcha = '';
@@ -166,7 +188,7 @@ app.post('/api/register', async (req, res) => {
         casesOpened: 0,
         avatar: null,
         registrationDate: new Date().toISOString(),
-        isAdmin: username === '@BayRex'
+        isAdmin: username === 'BayRex'  // Исправлено: убрал @
     };
 
     users.push(newUser);
@@ -395,6 +417,97 @@ app.post('/api/activate-promo', authenticateToken, (req, res) => {
     }
 });
 
+// Ежедневный бонус
+app.post('/api/daily-bonus', authenticateToken, (req, res) => {
+    const users = readUsers();
+    const userIndex = users.findIndex(u => u.id === req.user.id);
+    
+    if (userIndex === -1) {
+        return res.status(404).json({ error: 'Пользователь не найден' });
+    }
+
+    const user = users[userIndex];
+    const now = new Date();
+    const lastBonusDate = user.lastBonusDate ? new Date(user.lastBonusDate) : null;
+    
+    if (lastBonusDate && 
+        lastBonusDate.getDate() === now.getDate() &&
+        lastBonusDate.getMonth() === now.getMonth() &&
+        lastBonusDate.getFullYear() === now.getFullYear()) {
+        return res.status(400).json({ error: 'Вы уже получали бонус сегодня' });
+    }
+
+    const bonusAmount = 25;
+    user.balance += bonusAmount;
+    user.lastBonusDate = now.toISOString();
+    
+    users[userIndex] = user;
+    writeUsers(users);
+    updateLeaders(user);
+
+    res.json({
+        success: true,
+        bonus: bonusAmount,
+        newBalance: user.balance,
+        message: `Ежедневный бонус: +${bonusAmount} ★`
+    });
+});
+
+// Система достижений
+const achievements = {
+    firstCase: { name: 'Первый шаг', description: 'Откройте первый кейс', reward: 10 },
+    caseMaster: { name: 'Мастер кейсов', description: 'Откройте 10 кейсов', reward: 50 },
+    rich: { name: 'Богач', description: 'Накопите 1000 звезд', reward: 100 },
+    collector: { name: 'Коллекционер', description: 'Соберите 15 различных предметов', reward: 75 }
+};
+
+app.get('/api/achievements', authenticateToken, (req, res) => {
+    const users = readUsers();
+    const user = users.find(u => u.id === req.user.id);
+    
+    if (!user) {
+        return res.status(404).json({ error: 'Пользователь не найден' });
+    }
+
+    const userAchievements = user.achievements || [];
+    const unlocked = [];
+    
+    if (user.casesOpened >= 1 && !userAchievements.includes('firstCase')) {
+        unlocked.push('firstCase');
+    }
+    
+    if (user.casesOpened >= 10 && !userAchievements.includes('caseMaster')) {
+        unlocked.push('caseMaster');
+    }
+    
+    if (user.balance >= 1000 && !userAchievements.includes('rich')) {
+        unlocked.push('rich');
+    }
+    
+    if (unlocked.length > 0) {
+        user.achievements = user.achievements || [];
+        unlocked.forEach(achievementId => {
+            user.achievements.push(achievementId);
+            user.balance += achievements[achievementId].reward;
+        });
+        
+        writeUsers(users);
+        updateLeaders(user);
+    }
+
+    res.json({
+        achievements: Object.entries(achievements).map(([id, achievement]) => ({
+            id,
+            ...achievement,
+            unlocked: userAchievements.includes(id)
+        })),
+        unlocked: unlocked.map(id => ({
+            id,
+            ...achievements[id]
+        }))
+    });
+});
+
 app.post('/api/admin/set-balance', authenticateToken, (req, res) => {
     const { targetUsername, newBalance } = req.body;
 
@@ -426,6 +539,20 @@ app.post('/api/admin/set-balance', authenticateToken, (req, res) => {
 // Обслуживание клиента
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Error handling
+app.use((error, req, res, next) => {
+    console.error('Error:', error);
+    res.status(500).json({ 
+        error: 'Внутренняя ошибка сервера',
+        ...(process.env.NODE_ENV === 'development' && { details: error.message })
+    });
+});
+
+// 404 handler
+app.use((req, res) => {
+    res.status(404).json({ error: 'Маршрут не найден' });
 });
 
 // Инициализация и запуск
