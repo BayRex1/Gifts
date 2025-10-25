@@ -241,6 +241,12 @@
             background: linear-gradient(135deg, rgba(51, 144, 236, 0.1) 0%, transparent 100%);
         }
         
+        .case-preview-image {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+        
         .case-info {
             padding: 20px;
         }
@@ -274,6 +280,12 @@
             justify-content: center;
             font-size: 16px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .item-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
         
         .inventory-title {
@@ -313,6 +325,12 @@
             align-items: center;
             justify-content: center;
             font-size: 30px;
+        }
+        
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
         
         .item-name {
@@ -484,6 +502,12 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
         
+        .reward-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
         .reward-name {
             font-size: 26px;
             margin-bottom: 10px;
@@ -600,7 +624,188 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
+        /* Стили для рулетки */
+        .roulette-modal {
+            max-width: 900px;
+            width: 95%;
+        }
+
+        .roulette-container {
+            position: relative;
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .roulette-wheel {
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, 
+                #feca57, #ff9ff3, #54a0ff, #5f27cd
+            );
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .roulette-item {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transform-origin: 100% 100%;
+            left: 0;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(0deg);
+        }
+
+        .roulette-item-content {
+            transform: rotate(45deg);
+            text-align: center;
+            width: 80px;
+        }
+
+        .roulette-item-image {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            margin-bottom: 5px;
+        }
+
+        .roulette-item-name {
+            font-size: 10px;
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .roulette-pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid var(--accent);
+            z-index: 10;
+        }
+
+        .possible-items {
+            margin: 20px 0;
+        }
+
+        .possible-items h3 {
+            margin-bottom: 15px;
+            color: white;
+            text-align: center;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .item-preview-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .item-preview-card:hover {
+            transform: translateY(-2px);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .item-preview-image {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            margin-bottom: 8px;
+        }
+
+        .item-preview-name {
+            font-size: 12px;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .item-preview-value {
+            font-size: 11px;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .roulette-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .roulette-controls .btn {
+            min-width: 120px;
+        }
+
+        /* Анимации рулетки */
+        @keyframes rouletteSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(calc(360deg * 5 + var(--stop-angle))); }
+        }
+
+        .roulette-wheel.spinning {
+            animation: rouletteSpin 4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        /* Стили для уведомлений */
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         
+        /* Адаптивность */
         @media (max-width: 768px) {
             .buttons-container {
                 flex-direction: column;
@@ -612,6 +817,35 @@
             
             .admin-controls {
                 flex-direction: column;
+            }
+
+            .roulette-wheel {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .roulette-item-content {
+                width: 60px;
+            }
+            
+            .roulette-item-image {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .items-grid {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .roulette-wheel {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .roulette-modal {
+                padding: 20px;
             }
         }
     </style>
@@ -648,6 +882,12 @@
                         <path d="M20,6H4V4H20V6M20,18V20H4V18H20M20,12V14H4V12H20M9,10A2,2 0 0,1 11,12A2,2 0 0,1 9,14A2,2 0 0,1 7,12A2,2 0 0,1 9,10M9,16A2,2 0 0,1 11,18A2,2 0 0,1 9,20A2,2 0 0,1 7,18A2,2 0 0,1 9,16M15,11H17V17H15V11M15,7H17V9H15V7Z"/>
                     </svg>
                     Промокод
+                </div>
+                <div class="dropdown-item" id="daily-bonus">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#3390ec">
+                        <path d="M20,2H4V4L9.81,8.36C6.14,9.57 4.14,13.53 5.35,17.2C6.56,20.87 10.5,22.87 14.19,21.66C17.86,20.45 19.86,16.5 18.65,12.82C17.95,10.71 16.3,9.05 14.19,8.36L20,4V2M12,19A5,5 0 0,1 7,14A5,5 0 0,1 12,9A5,5 0 0,1 17,14A5,5 0 0,1 12,19Z"/>
+                    </svg>
+                    Ежедневный бонус
                 </div>
                 <div class="dropdown-item" id="best-drop">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="#3390ec">
@@ -709,17 +949,27 @@
                 <div class="cases-container">
                     <div class="case-card" data-case="daily">
                         <div class="case-image">
-                            <svg width="80" height="80" viewBox="0 0 24 24" fill="#3390ec">
-                                <path d="M5,4H19A2,2 0 0,1 21,6V18A2,2 0 0,1 19,20H5A2,2 0 0,1 3,18V6A2,2 0 0,1 5,4M5,8V12H11V8H5M13,8V12H19V8H13M5,14V18H11V14H5M13,14V18H19V14H13Z"/>
-                            </svg>
-                        </div>
-                        <div class="case-info">
+                            <img src="/images/cases/daily-case.png" alt="Ежедневный кейс" class="case-preview-image"
+                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzMzOTBlYyI+PHBhdGggZD0iTTUsNEgxOUEyLDIgMCAwLDEgMjEsNlYxOEEyLDIgMCAwLDEgMTksMjBINUEyLDIgMCAwLDEgMywxOFY2QTIsMiAwIDAsMSA1LDRNNSw4VjEySDExVjg"/>
+                                                         <div class="case-info">
                             <div class="case-name">Ежедневный кейс</div>
                             <div class="case-price">Бесплатно</div>
                             <div class="case-items">
-                                <div class="item-preview">💪</div>
-                                <div class="item-preview">📅</div>
-                                <div class="item-preview">🧹</div>
+                                <div class="item-preview">
+                                    <img src="/images/items/mighty-arm.png" alt="Mighty Arm" 
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                                    <span style="display:none">💪</span>
+                                </div>
+                                <div class="item-preview">
+                                    <img src="/images/items/desk-calendar.png" alt="Desk Calendar" 
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                                    <span style="display:none">📅</span>
+                                </div>
+                                <div class="item-preview">
+                                    <img src="/images/items/flying-broom.png" alt="Flying Broom" 
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                                    <span style="display:none">🧹</span>
+                                </div>
                             </div>
                             <button class="btn btn-primary open-case-btn" data-case="daily">Открыть</button>
                         </div>
@@ -727,18 +977,33 @@
                     
                     <div class="case-card" data-case="bomj">
                         <div class="case-image">
-                            <svg width="80" height="80" viewBox="0 0 24 24" fill="#3390ec">
-                                <path d="M12,3A4,4 0 0,1 16,7A4,4 0 0,1 12,11A4,4 0 0,1 8,7A4,4 0 0,1 12,3M12,13C14.67,13 20,14.33 20,17V20H4V17C4,14.33 9.33,13 12,13Z"/>
-                            </svg>
+                            <img src="/images/cases/bomj-case.png" alt="Бомжик" class="case-preview-image"
+                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzMzOTBlYyI+PHBhdGggZD0iTTEyLDNBNCw0IDAgMCwxIDE2LDdBNCw0IDAgMCwxIDEyLDExQTQsNCAwIDAsMSA4LDdBNCw0IDAgMCwxIDEyLDNNMTIsMTNDMTQuNjcsMTMgMjAsMTQuMzMgMjAsMTdWMjBINFYxN0M0LDE0LjMzIDkuMzMsMTMgMTIsMTNaIi8+PC9zdmc+'">
                         </div>
                         <div class="case-info">
                             <div class="case-name">Бомжик</div>
                             <div class="case-price">Бесплатно</div>
                             <div class="case-items">
-                                <div class="item-preview">❤️</div>
-                                <div class="item-preview">🧸</div>
-                                <div class="item-preview">🌹</div>
-                                <div class="item-preview">🚀</div>
+                                <div class="item-preview">
+                                    <img src="/images/items/heart.png" alt="Сердечко" 
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                                    <span style="display:none">❤️</span>
+                                </div>
+                                <div class="item-preview">
+                                    <img src="/images/items/bear.png" alt="Мишка" 
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                                    <span style="display:none">🧸</span>
+                                </div>
+                                <div class="item-preview">
+                                    <img src="/images/items/rose.png" alt="Роза" 
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                                    <span style="display:none">🌹</span>
+                                </div>
+                                <div class="item-preview">
+                                    <img src="/images/items/rocket.png" alt="Ракета" 
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                                    <span style="display:none">🚀</span>
+                                </div>
                             </div>
                             <button class="btn btn-primary open-case-btn" data-case="bomj">Открыть</button>
                         </div>
@@ -749,18 +1014,33 @@
                 <div class="cases-container">
                     <div class="case-card" data-case="durov">
                         <div class="case-image">
-                            <svg width="80" height="80" viewBox="0 0 24 24" fill="#3390ec">
-                                <path d="M18.71,19.5C17.88,20.74 17,21.95 15.66,21.97C14.32,22 13.89,21.18 12.37,21.18C10.84,21.18 10.37,21.95 9.1,22C7.79,22.05 6.8,20.68 5.96,19.47C4.25,17 2.94,12.45 4.7,9.39C5.57,7.87 7.13,6.91 8.82,6.88C10.1,6.86 11.32,7.75 12.11,7.75C12.89,7.75 14.37,6.68 15.92,6.84C16.57,6.87 18.39,7.1 19.56,8.82C19.47,8.88 17.39,10.1 17.41,12.63C17.44,15.65 20.06,16.66 20.09,16.67C20.06,16.74 19.67,18.11 18.71,19.5M13,3.5C13.73,2.67 14.94,2.04 15.94,2C16.07,3.17 15.6,4.35 14.9,5.19C14.21,6.04 13.07,6.7 11.95,6.61C11.8,5.46 12.36,4.26 13,3.5Z"/>
-                            </svg>
+                            <img src="/images/cases/durov-case.png" alt="Durov Case" class="case-preview-image"
+                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzMzOTBlYyI+PHBhdGggZD0iTTE4LjcxLDE5LjVDMTcuODgsMjAuNzQgMTcsMjEuOTUgMTUuNjYsMjEuOTdDMTQuMzIsMjIgMTMuODksMjEuMTggMTIuMzcsMjEuMThDMTAuODQsMjEuMTggMTAuMzcsMjEuOTUgOS4xLDIyQzcuNzksMjIuMDUgNi44LDIwLjY4IDUuOTYsMTkuNDdDNC4yNSwxNyAyLjk0LDEyLjQ1IDQuNyw5LjM5QzUuNTcsNy44NyA3LjEzLDYuOTEgOC44Miw2Ljg4QzEwLjEsNi44NiAxMS4zMiw3Ljc1IDEyLjExLDcuNzVDMTIuODksNy43NSAxNC4zNyw2LjY4IDE1LjkyLDYuODRDMTYuNTcsNi44NyAxOC4zOSw3LjEgMTkuNTYsOC44MkMxOS40Nyw4Ljg4IDE3LjM5LDEwLjEgMTcuNDEsMTIuNjNDMTcuNDQsMTUuNjUgMjAuMDYsMTYuNjYgMjAuMDksMTYuNjdDMjAuMDYsMTYuNzQgMTkuNjcsMTguMTEgMTguNzEsMTkuNU0xMywzLjVDMTMuNzMsMi42NyAxNC45NCwyLjA0IDE1Ljk0LDJDMTYuMDcsMy4xNyAxNS42LDQuMzUgMTQuOSw1LjE5QzE0LjIxLDYuMDQgMTMuMDcsNi43IDExLjk1LDYuNjFDMTEuOCw1LjQ2IDEyLjM2LDQuMjYgMTMsMy41WiIvPjwvc3ZnPg=='">
                         </div>
                         <div class="case-info">
                             <div class="case-name">Durov Case</div>
                             <div class="case-price">100 ★</div>
                             <div class="case-items">
-                                <div class="item-preview">🐸</div>
-                                <div class="item-preview">💨</div>
-                                <div class="item-preview">🎩</div>
-                                <div class="item-preview">💄</div>
+                                <div class="item-preview">
+                                    <img src="/images/items/pepe.png" alt="Plush Pepe" 
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                                    <span style="display:none">🐸</span>
+                                </div>
+                                <div class="item-preview">
+                                    <img src="/images/items/sigar.png" alt="Vintage Sigar" 
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                                    <span style="display:none">💨</span>
+                                </div>
+                                <div class="item-preview">
+                                    <img src="/images/items/hat.png" alt="Top Hat" 
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                                    <span style="display:none">🎩</span>
+                                </div>
+                                <div class="item-preview">
+                                    <img src="/images/items/perfume.png" alt="Perfume Bottle" 
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                                    <span style="display:none">💄</span>
+                                </div>
                             </div>
                             <button class="btn btn-primary open-case-btn" data-case="durov">Открыть за 100 ★</button>
                         </div>
@@ -768,18 +1048,33 @@
                     
                     <div class="case-card" data-case="bayrex">
                         <div class="case-image">
-                            <svg width="80" height="80" viewBox="0 0 24 24" fill="#3390ec">
-                                <path d="M19,3C20.1,3 21,3.9 21,5V19C21,20.1 20.1,21 19,21H5C3.89,21 3,20.1 3,19V5C3,3.9 3.9,3 5,3H19M12,8C9.79,8 8,9.79 8,12C8,14.21 9.79,16 12,16C14.21,16 16,14.21 16,12C16,9.79 14.21,8 12,8Z"/>
-                            </svg>
+                            <img src="/images/cases/bayrex-case.png" alt="BayRex Case" class="case-preview-image"
+                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzMzOTBlYyI+PHBhdGggZD0iTTE5LDNDMjAuMSwzIDIxLDMuOSAyMSw1VjE5QzIxLDIwLjEgMjAuMSwyMSAxOSwyMUg1QzMuODksMjEgMywyMC4xIDMsMTlWNUMzLDMuOSAzLjksMyA1LDNIMTZNMTIsOEM5Ljc5LDggOCw5Ljc5IDgsMTJDOCwxNC4yMSA5Ljc5LDE2IDEyLDE2QzE0LjIxLDE2IDE2LDE0LjIxIDE2LDEyQzE2LDkuNzkgMTQuMjEsOCAxMiw4WiIvPjwvc3ZnPg=='">
                         </div>
                         <div class="case-info">
                             <div class="case-name">BayRex Case</div>
                             <div class="case-price">150 ★</div>
                             <div class="case-items">
-                                <div class="item-preview">🐸</div>
-                                <div class="item-preview">💨</div>
-                                <div class="item-preview">🎩</div>
-                                <div class="item-preview">💄</div>
+                                <div class="item-preview">
+                                    <img src="/images/items/pepe.png" alt="Plush Pepe" 
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                                    <span style="display:none">🐸</span>
+                                </div>
+                                <div class="item-preview">
+                                    <img src="/images/items/sigar.png" alt="Vintage Sigar" 
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                                    <span style="display:none">💨</span>
+                                </div>
+                                <div class="item-preview">
+                                    <img src="/images/items/hat.png" alt="Top Hat" 
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                                    <span style="display:none">🎩</span>
+                                </div>
+                                <div class="item-preview">
+                                    <img src="/images/items/perfume.png" alt="Perfume Bottle" 
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                                    <span style="display:none">💄</span>
+                                </div>
                             </div>
                             <button class="btn btn-primary open-case-btn" data-case="bayrex">Открыть за 150 ★</button>
                         </div>
@@ -808,6 +1103,7 @@
         </div>
     </div>
 
+    <!-- Модальное окно регистрации -->
     <div class="modal" id="registration-modal">
         <div class="modal-content">
             <button class="modal-close" id="close-registration">&times;</button>
@@ -837,9 +1133,40 @@
         </div>
     </div>
 
+    <!-- Модальное окно рулетки -->
+    <div class="modal" id="roulette-modal">
+        <div class="modal-content roulette-modal">
+            <button class="modal-close" id="close-roulette">&times;</button>
+            <h2 class="modal-title" id="roulette-case-name">Открытие кейса</h2>
+            
+            <div class="roulette-container">
+                <div class="roulette-wheel" id="roulette-wheel">
+                    <!-- Рулетка будет генерироваться динамически -->
+                </div>
+                <div class="roulette-pointer"></div>
+            </div>
+            
+            <div class="possible-items">
+                <h3>Возможные предметы:</h3>
+                <div class="items-grid" id="possible-items">
+                    <!-- Предметы будут добавляться динамически -->
+                </div>
+            </div>
+            
+            <div class="roulette-controls">
+                <button class="btn btn-secondary" id="close-roulette-btn">Отмена</button>
+                <button class="btn btn-primary" id="spin-roulette">Открыть кейс</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Анимация открытия кейса -->
     <div class="case-opening" id="case-opening">
         <div class="case-reward">
-            <div class="reward-image" id="reward-image">🎁</div>
+            <div class="reward-image" id="reward-image">
+                <img src="" alt="Reward" id="reward-image-img" style="display:none">
+                <span id="reward-emoji">🎁</span>
+            </div>
             <div class="reward-name" id="reward-name">Mighty Arm</div>
             <div class="reward-value" id="reward-value">Цена: 10 ★</div>
             <button class="btn btn-primary" id="close-case">Закрыть</button>
@@ -851,6 +1178,8 @@
         let user = null;
         let token = localStorage.getItem('telegramGiftsToken');
         let casesData = null;
+        let currentCaseData = null;
+        let isSpinning = false;
 
         // DOM Elements
         const elements = {
@@ -866,6 +1195,19 @@
             tabContents: document.querySelectorAll('.tab-content')
         };
 
+        // Улучшенная функция API вызовов с повторными попытками
+        async function apiCallWithRetry(endpoint, method = 'GET', data = null, retries = 3) {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    return await apiCall(endpoint, method, data);
+                } catch (error) {
+                    if (i === retries - 1) throw error;
+                    await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+                }
+            }
+        }
+
+        // Основная функция API вызовов
         async function apiCall(endpoint, method = 'GET', data = null) {
             const options = {
                 method,
@@ -890,18 +1232,66 @@
             return result;
         }
 
+        // Функция для показа уведомлений
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <span>${message}</span>
+                    <button class="notification-close">&times;</button>
+                </div>
+            `;
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'error' ? '#f44336' : type === 'success' ? '#4CAF50' : '#2196F3'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                z-index: 10000;
+                max-width: 400px;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Автоматическое скрытие
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, 5000);
+            
+            // Закрытие по клику
+            notification.querySelector('.notification-close').addEventListener('click', () => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            });
+        }
+
+        // Инициализация приложения
         async function initApp() {
-            if (token) {
-                try {
-                    user = await apiCall('/user');
+            try {
+                showNotification('Загрузка приложения...', 'info');
+                
+                if (token) {
+                    user = await apiCallWithRetry('/user');
                     updateUI();
-                    loadCases();
-                    loadLeaders();
-                } catch (error) {
-                    localStorage.removeItem('telegramGiftsToken');
+                    await loadCases();
+                    await loadLeaders();
+                    showNotification('Добро пожаловать обратно!', 'success');
+                } else {
                     showRegistrationModal();
                 }
-            } else {
+            } catch (error) {
+                console.error('Ошибка инициализации:', error);
+                showNotification('Ошибка загрузки приложения', 'error');
+                localStorage.removeItem('telegramGiftsToken');
                 showRegistrationModal();
             }
         }
@@ -913,7 +1303,7 @@
 
         async function generateCaptcha() {
             try {
-                const data = await apiCall('/captcha');
+                const data = await apiCallWithRetry('/captcha');
                 document.getElementById('captcha-code').textContent = data.captcha;
             } catch (error) {
                 console.error('Ошибка загрузки капчи:', error);
@@ -922,7 +1312,7 @@
 
         async function registerUser(email, username, password, captchaInput) {
             const captcha = document.getElementById('captcha-code').textContent;
-            const result = await apiCall('/register', 'POST', {
+            const result = await apiCallWithRetry('/register', 'POST', {
                 email, username, password, captchaInput, captcha
             });
 
@@ -937,7 +1327,7 @@
 
         async function loadCases() {
             try {
-                casesData = await apiCall('/cases');
+                casesData = await apiCallWithRetry('/cases');
             } catch (error) {
                 console.error('Ошибка загрузки кейсов:', error);
             }
@@ -945,72 +1335,288 @@
 
         async function loadLeaders() {
             try {
-                const leaders = await apiCall('/leaders');
+                const leaders = await apiCallWithRetry('/leaders');
                 renderLeaders(leaders);
             } catch (error) {
                 console.error('Ошибка загрузки лидеров:', error);
             }
         }
 
-        async function openCase(caseType) {
+        // Функции для рулетки
+        function openRouletteModal(caseType) {
+            if (!casesData) {
+                showNotification('Данные кейсов не загружены', 'error');
+                return;
+            }
+            
+            currentCaseData = casesData[caseType];
+            if (!currentCaseData) {
+                showNotification('Кейс не найден', 'error');
+                return;
+            }
+            
+            // Проверяем баланс для платных кейсов
+            if (currentCaseData.price > 0 && user.balance < currentCaseData.price) {
+                showNotification('Недостаточно звезд для открытия этого кейса!', 'error');
+                return;
+            }
+            
+            // Заполняем модальное окно
+            document.getElementById('roulette-case-name').textContent = `Открытие: ${currentCaseData.name}`;
+            
+            // Создаем рулетку
+            createRouletteWheel(currentCaseData.items);
+            
+            // Показываем возможные предметы
+            showPossibleItems(currentCaseData.items);
+            
+            // Показываем модальное окно
+            document.getElementById('roulette-modal').classList.add('active');
+        }
+
+        function createRouletteWheel(items) {
+            const wheel = document.getElementById('roulette-wheel');
+            wheel.innerHTML = '';
+            wheel.style.transform = 'rotate(0deg)';
+            
+            const anglePerItem = 360 / items.length;
+            
+            items.forEach((item, index) => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'roulette-item';
+                itemElement.style.transform = `rotate(${index * anglePerItem}deg)`;
+                
+                // Чередуем цвета для лучшей видимости
+                const hue = (index * 360 / items.length) % 360;
+                itemElement.style.background = `hsl(${hue}, 70%, 45%)`;
+                
+                itemElement.innerHTML = `
+                    <div class="roulette-item-content">
+                        <img src="${item.image}" alt="${item.name}" class="roulette-item-image" 
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                        <span class="roulette-item-emoji" style="display:none">${getItemEmoji(item.name)}</span>
+                        <div class="roulette-item-name">${item.name}</div>
+                    </div>
+                `;
+                
+                wheel.appendChild(itemElement);
+            });
+        }
+
+        function getItemEmoji(itemName) {
+            const emojiMap = {
+                'Mighty Arm': '💪',
+                'Desk Calendar': '📅',
+                'Flying Broom': '🧹',
+                'Сердечко': '❤️',
+                'Мишка': '🧸',
+                'Роза': '🌹',
+                'Ракета': '🚀',
+                'Цветы': '💐',
+                'Алмаз': '💎',
+                'Plush Pepe (gold)': '🐸',
+                'Vintage Sigar': '💨',
+                'Top Hat': '🎩',
+                'Perfume Bottle': '💄'
+            };
+            return emojiMap[itemName] || '🎁';
+        }
+
+        function showPossibleItems(items) {
+            const container = document.getElementById('possible-items');
+            container.innerHTML = '';
+            
+            items.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'item-preview-card';
+                itemElement.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="item-preview-image"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                    <span class="item-preview-emoji" style="display:none">${getItemEmoji(item.name)}</span>
+                    <div class="item-preview-name">${item.name}</div>
+                    <div class="item-preview-value">${item.value} ★</div>
+                `;
+                container.appendChild(itemElement);
+            });
+        }
+
+        async function spinRoulette() {
+            if (isSpinning || !currentCaseData) return;
+            
+            isSpinning = true;
+            const spinButton = document.getElementById('spin-roulette');
+            spinButton.disabled = true;
+            spinButton.textContent = 'Открываем...';
+            
             try {
-                const result = await apiCall('/open-case', 'POST', { caseType });
+                // Выбираем случайный предмет
+                const randomIndex = Math.floor(Math.random() * currentCaseData.items.length);
+                const winningItem = currentCaseData.items[randomIndex];
+                
+                // Рассчитываем угол остановки (ставим выигрышный предмет сверху)
+                const anglePerItem = 360 / currentCaseData.items.length;
+                const stopAngle = 360 - (randomIndex * anglePerItem) + anglePerItem / 2;
+                
+                // Запускаем анимацию
+                const wheel = document.getElementById('roulette-wheel');
+                wheel.style.setProperty('--stop-angle', `${stopAngle}deg`);
+                wheel.classList.add('spinning');
+                
+                // Ждем окончания анимации
+                await new Promise(resolve => setTimeout(resolve, 4000));
+                
+                // Открываем кейс на сервере
+                const result = await apiCallWithRetry('/open-case', 'POST', { 
+                    caseType: Object.keys(casesData).find(key => casesData[key] === currentCaseData)
+                });
+                
+                // Обновляем данные пользователя
                 user.balance = result.newBalance;
                 user.casesOpened = result.casesOpened;
                 user.inventory.push(result.reward);
+                
+                // Показываем результат
+                showRewardAnimation(result.reward);
+                
+                // Закрываем модальное окно
+                closeRouletteModal();
+                
+                // Обновляем UI
                 updateUI();
                 loadLeaders();
-                showRewardAnimation(result.reward);
+                
+                // Проверяем достижения
+                setTimeout(checkAchievements, 1000);
+                
             } catch (error) {
-                alert(error.message);
+                showNotification(error.message, 'error');
+                // Сбрасываем анимацию при ошибке
+                const wheel = document.getElementById('roulette-wheel');
+                wheel.classList.remove('spinning');
+                wheel.style.transform = 'rotate(0deg)';
+            } finally {
+                isSpinning = false;
+                spinButton.disabled = false;
+                spinButton.textContent = 'Открыть кейс';
+            }
+        }
+
+        function closeRouletteModal() {
+            document.getElementById('roulette-modal').classList.remove('active');
+            const wheel = document.getElementById('roulette-wheel');
+            wheel.classList.remove('spinning');
+            wheel.style.transform = 'rotate(0deg)';
+            currentCaseData = null;
+        }
+
+        function showRewardAnimation(reward) {
+            const rewardImage = document.getElementById('reward-image');
+            const rewardImageImg = document.getElementById('reward-image-img');
+            const rewardEmoji = document.getElementById('reward-emoji');
+            
+            // Показываем изображение или эмодзи
+            if (reward.image) {
+                rewardImageImg.src = reward.image;
+                rewardImageImg.style.display = 'block';
+                rewardEmoji.style.display = 'none';
+            } else {
+                rewardEmoji.textContent = getItemEmoji(reward.name);
+                rewardEmoji.style.display = 'block';
+                rewardImageImg.style.display = 'none';
+            }
+            
+            document.getElementById('reward-name').textContent = reward.name;
+            document.getElementById('reward-value').textContent = `Цена: ${reward.value} ★`;
+            document.getElementById('case-opening').classList.add('active');
+        }
+
+        // Функция для проверки достижений
+        async function checkAchievements() {
+            try {
+                const result = await apiCallWithRetry('/achievements');
+                if (result.unlocked && result.unlocked.length > 0) {
+                    result.unlocked.forEach(achievement => {
+                        showNotification(
+                            `Достижение разблокировано: ${achievement.name}! +${achievement.reward} ★`,
+                            'success'
+                        );
+                    });
+                    // Обновляем баланс если получили награду
+                    if (result.unlocked.length > 0) {
+                        user = await apiCallWithRetry('/user');
+                        updateUI();
+                    }
+                }
+                return result;
+            } catch (error) {
+                console.error('Ошибка проверки достижений:', error);
+            }
+        }
+
+        // Функция для проверки ежедневного бонуса
+        async function checkDailyBonus() {
+            try {
+                const result = await apiCallWithRetry('/daily-bonus', 'POST');
+                user.balance = result.newBalance;
+                updateUI();
+                loadLeaders();
+                showNotification(result.message, 'success');
+            } catch (error) {
+                if (error.message.includes('уже получали')) {
+                    showNotification('Вы уже получали бонус сегодня', 'info');
+                } else {
+                    showNotification(error.message, 'error');
+                }
             }
         }
 
         async function sellItem(itemId) {
             try {
-                const result = await apiCall('/sell-item', 'POST', { itemId });
+                const result = await apiCallWithRetry('/sell-item', 'POST', { itemId });
                 user.balance = result.newBalance;
                 user.inventory = user.inventory.filter(item => item.id !== itemId);
                 updateUI();
                 loadLeaders();
+                showNotification(`Предмет продан за ${result.soldItem.value} ★`, 'success');
             } catch (error) {
-                alert(error.message);
+                showNotification(error.message, 'error');
             }
         }
 
         async function changeAvatar(avatarUrl) {
             try {
-                await apiCall('/change-avatar', 'POST', { avatarUrl });
+                await apiCallWithRetry('/change-avatar', 'POST', { avatarUrl });
                 user.avatar = avatarUrl;
                 updateUI();
+                showNotification('Аватар успешно изменен', 'success');
             } catch (error) {
-                alert(error.message);
+                showNotification(error.message, 'error');
             }
         }
 
         async function activatePromoCode(promoCode) {
             try {
-                const result = await apiCall('/activate-promo', 'POST', { promoCode });
+                const result = await apiCallWithRetry('/activate-promo', 'POST', { promoCode });
                 user.balance = result.newBalance;
                 updateUI();
                 loadLeaders();
-                alert(result.message);
+                showNotification(result.message, 'success');
             } catch (error) {
-                alert(error.message);
+                showNotification(error.message, 'error');
             }
         }
 
         async function setUserBalance(targetUsername, newBalance) {
             try {
-                const result = await apiCall('/admin/set-balance', 'POST', { targetUsername, newBalance });
+                const result = await apiCallWithRetry('/admin/set-balance', 'POST', { targetUsername, newBalance });
                 if (targetUsername === user.username) {
                     user.balance = parseInt(newBalance);
                     updateUI();
                 }
                 loadLeaders();
-                alert(result.message);
+                showNotification(result.message, 'success');
             } catch (error) {
-                alert(error.message);
+                showNotification(error.message, 'error');
             }
         }
 
@@ -1045,7 +1651,11 @@
                 const itemElement = document.createElement('div');
                 itemElement.className = 'inventory-item';
                 itemElement.innerHTML = `
-                    <div class="item-image">${item.emoji}</div>
+                    <div class="item-image">
+                        <img src="${item.image}" alt="${item.name}" 
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                        <span style="display:none">${getItemEmoji(item.name)}</span>
+                    </div>
                     <div class="item-name">${item.name}</div>
                     <div class="item-value">${item.value} ★</div>
                     <button class="sell-btn" data-id="${item.id}">Продать за ${item.value} ★</button>
@@ -1072,7 +1682,7 @@
                     <td>${index + 1}</td>
                     <td>
                         <div class="leader-user">
-                            <div class="leader-avatar">${leader.username.charAt(1).toUpperCase()}</div>
+                            <div class="leader-avatar">${leader.username.charAt(0).toUpperCase()}</div>
                             ${leader.username} ${isCurrentUser ? '<strong>(Вы)</strong>' : ''}
                         </div>
                     </td>
@@ -1089,13 +1699,6 @@
             });
         }
 
-        function showRewardAnimation(reward) {
-            document.getElementById('reward-image').textContent = reward.emoji;
-            document.getElementById('reward-name').textContent = reward.name;
-            document.getElementById('reward-value').textContent = `Цена: ${reward.value} ★`;
-            document.getElementById('case-opening').classList.add('active');
-        }
-
         // Event Listeners
         document.getElementById('registration-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -1106,17 +1709,31 @@
             
             try {
                 await registerUser(email, username, password, captchaInput);
+                showNotification('Регистрация успешна!', 'success');
             } catch (error) {
-                alert(error.message);
+                showNotification(error.message, 'error');
                 generateCaptcha();
             }
         });
 
+        // Обработчики для кейсов (открытие рулетки)
         document.querySelectorAll('.open-case-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const caseType = this.getAttribute('data-case');
-                openCase(caseType);
+                openRouletteModal(caseType);
             });
+        });
+
+        // Обработчики для модального окна рулетки
+        document.getElementById('close-roulette').addEventListener('click', closeRouletteModal);
+        document.getElementById('close-roulette-btn').addEventListener('click', closeRouletteModal);
+        document.getElementById('spin-roulette').addEventListener('click', spinRoulette);
+
+        // Закрытие по клику вне модального окна
+        document.getElementById('roulette-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeRouletteModal();
+            }
         });
 
         document.getElementById('change-avatar').addEventListener('click', function() {
@@ -1129,29 +1746,35 @@
             if (promoCode) activatePromoCode(promoCode);
         });
 
+        document.getElementById('daily-bonus').addEventListener('click', checkDailyBonus);
+
         document.getElementById('set-balance-btn').addEventListener('click', function() {
             const targetUsername = document.getElementById('username-input').value;
             const newBalance = document.getElementById('balance-input').value;
             if (targetUsername && newBalance) {
                 setUserBalance(targetUsername, newBalance);
             } else {
-                alert('Заполните все поля');
+                showNotification('Заполните все поля', 'error');
             }
         });
 
         document.getElementById('best-drop').addEventListener('click', function() {
             if (!user.inventory.length) {
-                alert('У вас пока нет подарков!');
+                showNotification('У вас пока нет подарков!', 'error');
                 return;
             }
             const bestItem = user.inventory.reduce((best, current) => 
                 current.value > best.value ? current : best, user.inventory[0]);
-            alert(`Ваш лучший подарок: ${bestItem.name} (${bestItem.emoji}) стоимостью ${bestItem.value} ★`);
+            showNotification(`Ваш лучший подарок: ${bestItem.name} стоимостью ${bestItem.value} ★`, 'info');
         });
 
         document.getElementById('statistics').addEventListener('click', function() {
             const totalValue = user.inventory.reduce((sum, item) => sum + item.value, 0);
-            alert(`Статистика:\nОткрыто кейсов: ${user.casesOpened}\nКоличество подарков: ${user.inventory.length}\nОбщая стоимость: ${totalValue} ★`);
+            const stats = `Статистика:
+Открыто кейсов: ${user.casesOpened}
+Количество подарков: ${user.inventory.length}
+Общая стоимость: ${totalValue} ★`;
+            alert(stats);
         });
 
         document.getElementById('close-registration').addEventListener('click', () => {
