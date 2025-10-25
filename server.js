@@ -14,7 +14,6 @@ const JWT_SECRET = process.env.JWT_SECRET || 'telegram-gifts-secret-key-render';
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
-app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
 
 // Middleware для логирования
 app.use((req, res, next) => {
@@ -63,19 +62,11 @@ function readLeaders() {
 }
 
 function writeUsers(users) {
-    try {
-        fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
-    } catch (error) {
-        console.error('Ошибка записи users:', error);
-    }
+    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
 }
 
 function writeLeaders(leaders) {
-    try {
-        fs.writeFileSync(LEADERS_FILE, JSON.stringify(leaders, null, 2));
-    } catch (error) {
-        console.error('Ошибка записи leaders:', error);
-    }
+    fs.writeFileSync(LEADERS_FILE, JSON.stringify(leaders, null, 2));
 }
 
 // Данные кейсов
@@ -157,166 +148,101 @@ app.get('/health', (req, res) => {
     });
 });
 
-// API информация
-app.get('/api', (req, res) => {
-    res.json({
-        name: 'Telegram Gifts API',
-        version: '1.0.0',
-        endpoints: [
-            '/api/captcha',
-            '/api/register',
-            '/api/login',
-            '/api/user',
-            '/api/cases',
-            '/api/leaders',
-            '/api/open-case',
-            '/api/sell-item',
-            '/api/daily-bonus',
-            '/api/achievements'
-        ]
-    });
-});
-
 app.get('/api/captcha', (req, res) => {
-    try {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let captcha = '';
-        for (let i = 0; i < 6; i++) {
-            captcha += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        console.log('Сгенерирована капча:', captcha);
-        res.json({ captcha });
-    } catch (error) {
-        console.error('Ошибка генерации капчи:', error);
-        res.status(500).json({ error: 'Ошибка генерации капчи' });
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let captcha = '';
+    for (let i = 0; i < 6; i++) {
+        captcha += chars.charAt(Math.floor(Math.random() * chars.length));
     }
+    res.json({ captcha });
 });
 
 app.post('/api/register', async (req, res) => {
-    try {
-        const { email, username, password, captchaInput, captcha } = req.body;
+    const { email, username, password, captchaInput, captcha } = req.body;
 
-        console.log('Регистрация:', { email, username, captchaInput, captcha });
-
-        if (captchaInput !== captcha) {
-            return res.status(400).json({ error: 'Неверная капча' });
-        }
-
-        if (!email || !username || !password) {
-            return res.status(400).json({ error: 'Все поля обязательны' });
-        }
-
-        const users = readUsers();
-
-        if (users.find(u => u.email === email)) {
-            return res.status(400).json({ error: 'Email уже используется' });
-        }
-
-        if (users.find(u => u.username === username)) {
-            return res.status(400).json({ error: 'Имя пользователя занято' });
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = {
-            id: uuidv4(),
-            email,
-            username,
-            password: hashedPassword,
-            balance: 100,
-            inventory: [],
-            casesOpened: 0,
-            avatar: null,
-            registrationDate: new Date().toISOString(),
-            isAdmin: username === 'BayRex',
-            achievements: []
-        };
-
-        users.push(newUser);
-        writeUsers(users);
-        updateLeaders(newUser);
-
-        const token = jwt.sign(
-            { id: newUser.id, username: newUser.username, isAdmin: newUser.isAdmin },
-            JWT_SECRET,
-            { expiresIn: '24h' }
-        );
-
-        console.log('Успешная регистрация:', username);
-
-        res.json({
-            token,
-            user: {
-                id: newUser.id,
-                username: newUser.username,
-                email: newUser.email,
-                balance: newUser.balance,
-                inventory: newUser.inventory,
-                casesOpened: newUser.casesOpened,
-                avatar: newUser.avatar,
-                isAdmin: newUser.isAdmin
-            }
-        });
-    } catch (error) {
-        console.error('Ошибка регистрации:', error);
-        res.status(500).json({ error: 'Ошибка регистрации' });
+    if (captchaInput !== captcha) {
+        return res.status(400).json({ error: 'Неверная капча' });
     }
+
+    if (!email || !username || !password) {
+        return res.status(400).json({ error: 'Все поля обязательны' });
+    }
+
+    const users = readUsers();
+
+    if (users.find(u => u.email === email)) {
+        return res.status(400).json({ error: 'Email уже используется' });
+    }
+
+    if (users.find(u => u.username === username)) {
+        return res.status(400).json({ error: 'Имя пользователя занято' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = {
+        id: uuidv4(),
+        email,
+        username,
+        password: hashedPassword,
+        balance: 100,
+        inventory: [],
+        casesOpened: 0,
+        avatar: null,
+        registrationDate: new Date().toISOString(),
+        isAdmin: username === 'BayRex',
+        achievements: [],
+        lastBonusDate: null
+    };
+
+    users.push(newUser);
+    writeUsers(users);
+    updateLeaders(newUser);
+
+    const token = jwt.sign(
+        { id: newUser.id, username: newUser.username, isAdmin: newUser.isAdmin },
+        JWT_SECRET,
+        { expiresIn: '24h' }
+    );
+
+    res.json({
+        token,
+        user: {
+            id: newUser.id,
+            username: newUser.username,
+            email: newUser.email,
+            balance: newUser.balance,
+            inventory: newUser.inventory,
+            casesOpened: newUser.casesOpened,
+            avatar: newUser.avatar,
+            isAdmin: newUser.isAdmin
+        }
+    });
 });
 
 app.post('/api/login', async (req, res) => {
-    try {
-        const { email, password } = req.body;
+    const { email, password } = req.body;
 
-        console.log('Логин:', email);
+    const users = readUsers();
+    const user = users.find(u => u.email === email);
 
-        const users = readUsers();
-        const user = users.find(u => u.email === email);
-
-        if (!user) {
-            return res.status(400).json({ error: 'Пользователь не найден' });
-        }
-
-        const validPassword = await bcrypt.compare(password, user.password);
-        if (!validPassword) {
-            return res.status(400).json({ error: 'Неверный пароль' });
-        }
-
-        const token = jwt.sign(
-            { id: user.id, username: user.username, isAdmin: user.isAdmin },
-            JWT_SECRET,
-            { expiresIn: '24h' }
-        );
-
-        console.log('Успешный логин:', user.username);
-
-        res.json({
-            token,
-            user: {
-                id: user.id,
-                username: user.username,
-                email: user.email,
-                balance: user.balance,
-                inventory: user.inventory,
-                casesOpened: user.casesOpened,
-                avatar: user.avatar,
-                isAdmin: user.isAdmin
-            }
-        });
-    } catch (error) {
-        console.error('Ошибка логина:', error);
-        res.status(500).json({ error: 'Ошибка входа' });
+    if (!user) {
+        return res.status(400).json({ error: 'Пользователь не найден' });
     }
-});
 
-app.get('/api/user', authenticateToken, (req, res) => {
-    try {
-        const users = readUsers();
-        const user = users.find(u => u.id === req.user.id);
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) {
+        return res.status(400).json({ error: 'Неверный пароль' });
+    }
 
-        if (!user) {
-            return res.status(404).json({ error: 'Пользователь не найден' });
-        }
+    const token = jwt.sign(
+        { id: user.id, username: user.username, isAdmin: user.isAdmin },
+        JWT_SECRET,
+        { expiresIn: '24h' }
+    );
 
-        res.json({
+    res.json({
+        token,
+        user: {
             id: user.id,
             username: user.username,
             email: user.email,
@@ -325,155 +251,154 @@ app.get('/api/user', authenticateToken, (req, res) => {
             casesOpened: user.casesOpened,
             avatar: user.avatar,
             isAdmin: user.isAdmin
-        });
-    } catch (error) {
-        console.error('Ошибка получения пользователя:', error);
-        res.status(500).json({ error: 'Ошибка получения данных пользователя' });
+        }
+    });
+});
+
+app.get('/api/user', authenticateToken, (req, res) => {
+    const users = readUsers();
+    const user = users.find(u => u.id === req.user.id);
+
+    if (!user) {
+        return res.status(404).json({ error: 'Пользователь не найден' });
     }
+
+    res.json({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        balance: user.balance,
+        inventory: user.inventory,
+        casesOpened: user.casesOpened,
+        avatar: user.avatar,
+        isAdmin: user.isAdmin
+    });
 });
 
 function updateLeaders(user) {
-    try {
-        let leaders = readLeaders();
-        leaders = leaders.filter(l => l.id !== user.id);
-        
-        const bestItem = user.inventory.length > 0 ? 
-            user.inventory.reduce((best, current) => 
-                current.value > best.value ? current : best, user.inventory[0]) : 
-            null;
+    let leaders = readLeaders();
+    leaders = leaders.filter(l => l.id !== user.id);
+    
+    const bestItem = user.inventory.length > 0 ? 
+        user.inventory.reduce((best, current) => 
+            current.value > best.value ? current : best, user.inventory[0]) : 
+        null;
 
-        leaders.push({
-            id: user.id,
-            username: user.username,
-            balance: user.balance,
-            casesOpened: user.casesOpened,
-            bestItem: bestItem ? bestItem.name : 'Нет предметов',
-            bestItemValue: bestItem ? bestItem.value : 0
-        });
+    leaders.push({
+        id: user.id,
+        username: user.username,
+        balance: user.balance,
+        casesOpened: user.casesOpened,
+        bestItem: bestItem ? bestItem.name : 'Нет предметов',
+        bestItemValue: bestItem ? bestItem.value : 0
+    });
 
-        leaders.sort((a, b) => b.balance - a.balance);
-        writeLeaders(leaders);
-    } catch (error) {
-        console.error('Ошибка обновления лидеров:', error);
-    }
+    leaders.sort((a, b) => b.balance - a.balance);
+    writeLeaders(leaders);
 }
 
 app.get('/api/leaders', (req, res) => {
-    try {
-        const leaders = readLeaders();
-        console.log('Запрос лидеров, найдено:', leaders.length);
-        res.json(leaders.slice(0, 50));
-    } catch (error) {
-        console.error('Ошибка получения лидеров:', error);
-        res.status(500).json({ error: 'Ошибка загрузки таблицы лидеров' });
-    }
+    const leaders = readLeaders();
+    res.json(leaders.slice(0, 50));
 });
 
 app.get('/api/cases', (req, res) => {
-    try {
-        console.log('Запрос кейсов получен');
-        res.json(casesData);
-    } catch (error) {
-        console.error('Ошибка в /api/cases:', error);
-        res.status(500).json({ error: 'Ошибка загрузки кейсов' });
-    }
+    res.json(casesData);
 });
 
 app.post('/api/open-case', authenticateToken, (req, res) => {
-    try {
-        const { caseType } = req.body;
-        console.log('Открытие кейса:', caseType, 'пользователем:', req.user.username);
+    const { caseType } = req.body;
+    const caseData = casesData[caseType];
 
-        const caseData = casesData[caseType];
-
-        if (!caseData) {
-            return res.status(400).json({ error: 'Кейс не найден' });
-        }
-
-        const users = readUsers();
-        const userIndex = users.findIndex(u => u.id === req.user.id);
-
-        if (userIndex === -1) {
-            return res.status(404).json({ error: 'Пользователь не найден' });
-        }
-
-        const user = users[userIndex];
-
-        if (caseData.price > 0 && user.balance < caseData.price) {
-            return res.status(400).json({ error: 'Недостаточно звезд' });
-        }
-
-        if (caseData.price > 0) {
-            user.balance -= caseData.price;
-        }
-
-        const randomIndex = Math.floor(Math.random() * caseData.items.length);
-        const reward = { ...caseData.items[randomIndex], id: uuidv4() };
-
-        user.inventory.push(reward);
-        user.casesOpened++;
-
-        users[userIndex] = user;
-        writeUsers(users);
-        updateLeaders(user);
-
-        console.log('Кейс открыт:', reward.name, 'для пользователя:', user.username);
-
-        res.json({
-            reward,
-            newBalance: user.balance,
-            casesOpened: user.casesOpened
-        });
-    } catch (error) {
-        console.error('Ошибка открытия кейса:', error);
-        res.status(500).json({ error: 'Ошибка открытия кейса' });
+    if (!caseData) {
+        return res.status(400).json({ error: 'Кейс не найден' });
     }
+
+    const users = readUsers();
+    const userIndex = users.findIndex(u => u.id === req.user.id);
+
+    if (userIndex === -1) {
+        return res.status(404).json({ error: 'Пользователь не найден' });
+    }
+
+    const user = users[userIndex];
+
+    if (caseData.price > 0 && user.balance < caseData.price) {
+        return res.status(400).json({ error: 'Недостаточно звезд' });
+    }
+
+    if (caseData.price > 0) {
+        user.balance -= caseData.price;
+    }
+
+    const randomIndex = Math.floor(Math.random() * caseData.items.length);
+    const reward = { ...caseData.items[randomIndex], id: uuidv4() };
+
+    user.inventory.push(reward);
+    user.casesOpened++;
+
+    users[userIndex] = user;
+    writeUsers(users);
+    updateLeaders(user);
+
+    res.json({
+        reward,
+        newBalance: user.balance,
+        casesOpened: user.casesOpened
+    });
 });
 
 app.post('/api/sell-item', authenticateToken, (req, res) => {
-    try {
-        const { itemId } = req.body;
-        console.log('Продажа предмета:', itemId, 'пользователем:', req.user.username);
+    const { itemId } = req.body;
 
-        const users = readUsers();
-        const userIndex = users.findIndex(u => u.id === req.user.id);
+    const users = readUsers();
+    const userIndex = users.findIndex(u => u.id === req.user.id);
 
-        if (userIndex === -1) {
-            return res.status(404).json({ error: 'Пользователь не найден' });
-        }
-
-        const user = users[userIndex];
-        const itemIndex = user.inventory.findIndex(item => item.id === itemId);
-
-        if (itemIndex === -1) {
-            return res.status(404).json({ error: 'Предмет не найден' });
-        }
-
-        const item = user.inventory[itemIndex];
-        user.balance += item.value;
-        user.inventory.splice(itemIndex, 1);
-
-        users[userIndex] = user;
-        writeUsers(users);
-        updateLeaders(user);
-
-        console.log('Предмет продан:', item.name, 'за', item.value, 'звезд');
-
-        res.json({
-            newBalance: user.balance,
-            soldItem: item
-        });
-    } catch (error) {
-        console.error('Ошибка продажи предмета:', error);
-        res.status(500).json({ error: 'Ошибка продажи предмета' });
+    if (userIndex === -1) {
+        return res.status(404).json({ error: 'Пользователь не найден' });
     }
+
+    const user = users[userIndex];
+    const itemIndex = user.inventory.findIndex(item => item.id === itemId);
+
+    if (itemIndex === -1) {
+        return res.status(404).json({ error: 'Предмет не найден' });
+    }
+
+    const item = user.inventory[itemIndex];
+    user.balance += item.value;
+    user.inventory.splice(itemIndex, 1);
+
+    users[userIndex] = user;
+    writeUsers(users);
+    updateLeaders(user);
+
+    res.json({
+        newBalance: user.balance,
+        soldItem: item
+    });
 });
 
 app.post('/api/change-avatar', authenticateToken, (req, res) => {
-    try {
-        const { avatarUrl } = req.body;
-        console.log('Смена аватара пользователем:', req.user.username);
+    const { avatarUrl } = req.body;
 
+    const users = readUsers();
+    const userIndex = users.findIndex(u => u.id === req.user.id);
+
+    if (userIndex === -1) {
+        return res.status(404).json({ error: 'Пользователь не найден' });
+    }
+
+    users[userIndex].avatar = avatarUrl;
+    writeUsers(users);
+
+    res.json({ avatar: avatarUrl });
+});
+
+app.post('/api/activate-promo', authenticateToken, (req, res) => {
+    const { promoCode } = req.body;
+
+    if (promoCode.toUpperCase() === 'TELEGRAM2023') {
         const users = readUsers();
         const userIndex = users.findIndex(u => u.id === req.user.id);
 
@@ -481,90 +406,54 @@ app.post('/api/change-avatar', authenticateToken, (req, res) => {
             return res.status(404).json({ error: 'Пользователь не найден' });
         }
 
-        users[userIndex].avatar = avatarUrl;
+        users[userIndex].balance += 50;
         writeUsers(users);
+        updateLeaders(users[userIndex]);
 
-        res.json({ avatar: avatarUrl });
-    } catch (error) {
-        console.error('Ошибка смены аватара:', error);
-        res.status(500).json({ error: 'Ошибка смены аватара' });
-    }
-});
-
-app.post('/api/activate-promo', authenticateToken, (req, res) => {
-    try {
-        const { promoCode } = req.body;
-        console.log('Активация промокода:', promoCode, 'пользователем:', req.user.username);
-
-        if (promoCode.toUpperCase() === 'TELEGRAM2023') {
-            const users = readUsers();
-            const userIndex = users.findIndex(u => u.id === req.user.id);
-
-            if (userIndex === -1) {
-                return res.status(404).json({ error: 'Пользователь не найден' });
-            }
-
-            users[userIndex].balance += 50;
-            writeUsers(users);
-            updateLeaders(users[userIndex]);
-
-            console.log('Промокод активирован для:', users[userIndex].username);
-
-            res.json({
-                success: true,
-                message: 'Промокод активирован! +50 ★',
-                newBalance: users[userIndex].balance
-            });
-        } else {
-            res.status(400).json({ error: 'Неверный промокод' });
-        }
-    } catch (error) {
-        console.error('Ошибка активации промокода:', error);
-        res.status(500).json({ error: 'Ошибка активации промокода' });
+        res.json({
+            success: true,
+            message: 'Промокод активирован! +50 ★',
+            newBalance: users[userIndex].balance
+        });
+    } else {
+        res.status(400).json({ error: 'Неверный промокод' });
     }
 });
 
 // Ежедневный бонус
 app.post('/api/daily-bonus', authenticateToken, (req, res) => {
-    try {
-        const users = readUsers();
-        const userIndex = users.findIndex(u => u.id === req.user.id);
-        
-        if (userIndex === -1) {
-            return res.status(404).json({ error: 'Пользователь не найден' });
-        }
-
-        const user = users[userIndex];
-        const now = new Date();
-        const lastBonusDate = user.lastBonusDate ? new Date(user.lastBonusDate) : null;
-        
-        if (lastBonusDate && 
-            lastBonusDate.getDate() === now.getDate() &&
-            lastBonusDate.getMonth() === now.getMonth() &&
-            lastBonusDate.getFullYear() === now.getFullYear()) {
-            return res.status(400).json({ error: 'Вы уже получали бонус сегодня' });
-        }
-
-        const bonusAmount = 25;
-        user.balance += bonusAmount;
-        user.lastBonusDate = now.toISOString();
-        
-        users[userIndex] = user;
-        writeUsers(users);
-        updateLeaders(user);
-
-        console.log('Ежедневный бонус выдан:', user.username, '+', bonusAmount, 'звезд');
-
-        res.json({
-            success: true,
-            bonus: bonusAmount,
-            newBalance: user.balance,
-            message: `Ежедневный бонус: +${bonusAmount} ★`
-        });
-    } catch (error) {
-        console.error('Ошибка выдачи ежедневного бонуса:', error);
-        res.status(500).json({ error: 'Ошибка выдачи бонуса' });
+    const users = readUsers();
+    const userIndex = users.findIndex(u => u.id === req.user.id);
+    
+    if (userIndex === -1) {
+        return res.status(404).json({ error: 'Пользователь не найден' });
     }
+
+    const user = users[userIndex];
+    const now = new Date();
+    const lastBonusDate = user.lastBonusDate ? new Date(user.lastBonusDate) : null;
+    
+    if (lastBonusDate && 
+        lastBonusDate.getDate() === now.getDate() &&
+        lastBonusDate.getMonth() === now.getMonth() &&
+        lastBonusDate.getFullYear() === now.getFullYear()) {
+        return res.status(400).json({ error: 'Вы уже получали бонус сегодня' });
+    }
+
+    const bonusAmount = 25;
+    user.balance += bonusAmount;
+    user.lastBonusDate = now.toISOString();
+    
+    users[userIndex] = user;
+    writeUsers(users);
+    updateLeaders(user);
+
+    res.json({
+        success: true,
+        bonus: bonusAmount,
+        newBalance: user.balance,
+        message: `Ежедневный бонус: +${bonusAmount} ★`
+    });
 });
 
 // Система достижений
@@ -576,91 +465,78 @@ const achievements = {
 };
 
 app.get('/api/achievements', authenticateToken, (req, res) => {
-    try {
-        const users = readUsers();
-        const user = users.find(u => u.id === req.user.id);
-        
-        if (!user) {
-            return res.status(404).json({ error: 'Пользователь не найден' });
-        }
-
-        const userAchievements = user.achievements || [];
-        const unlocked = [];
-        
-        if (user.casesOpened >= 1 && !userAchievements.includes('firstCase')) {
-            unlocked.push('firstCase');
-        }
-        
-        if (user.casesOpened >= 10 && !userAchievements.includes('caseMaster')) {
-            unlocked.push('caseMaster');
-        }
-        
-        if (user.balance >= 1000 && !userAchievements.includes('rich')) {
-            unlocked.push('rich');
-        }
-        
-        if (unlocked.length > 0) {
-            user.achievements = user.achievements || [];
-            unlocked.forEach(achievementId => {
-                user.achievements.push(achievementId);
-                user.balance += achievements[achievementId].reward;
-            });
-            
-            writeUsers(users);
-            updateLeaders(user);
-        }
-
-        res.json({
-            achievements: Object.entries(achievements).map(([id, achievement]) => ({
-                id,
-                ...achievement,
-                unlocked: userAchievements.includes(id)
-            })),
-            unlocked: unlocked.map(id => ({
-                id,
-                ...achievements[id]
-            }))
-        });
-    } catch (error) {
-        console.error('Ошибка получения достижений:', error);
-        res.status(500).json({ error: 'Ошибка получения достижений' });
+    const users = readUsers();
+    const user = users.find(u => u.id === req.user.id);
+    
+    if (!user) {
+        return res.status(404).json({ error: 'Пользователь не найден' });
     }
+
+    const userAchievements = user.achievements || [];
+    const unlocked = [];
+    
+    if (user.casesOpened >= 1 && !userAchievements.includes('firstCase')) {
+        unlocked.push('firstCase');
+    }
+    
+    if (user.casesOpened >= 10 && !userAchievements.includes('caseMaster')) {
+        unlocked.push('caseMaster');
+    }
+    
+    if (user.balance >= 1000 && !userAchievements.includes('rich')) {
+        unlocked.push('rich');
+    }
+    
+    if (unlocked.length > 0) {
+        user.achievements = user.achievements || [];
+        unlocked.forEach(achievementId => {
+            user.achievements.push(achievementId);
+            user.balance += achievements[achievementId].reward;
+        });
+        
+        writeUsers(users);
+        updateLeaders(user);
+    }
+
+    res.json({
+        achievements: Object.entries(achievements).map(([id, achievement]) => ({
+            id,
+            ...achievement,
+            unlocked: userAchievements.includes(id)
+        })),
+        unlocked: unlocked.map(id => ({
+            id,
+            ...achievements[id]
+        }))
+    });
 });
 
 app.post('/api/admin/set-balance', authenticateToken, (req, res) => {
-    try {
-        const { targetUsername, newBalance } = req.body;
-        console.log('Установка баланса администратором:', req.user.username, 'для:', targetUsername);
+    const { targetUsername, newBalance } = req.body;
 
-        if (!req.user.isAdmin) {
-            return res.status(403).json({ error: 'Недостаточно прав' });
-        }
-
-        const users = readUsers();
-        const targetUserIndex = users.findIndex(u => u.username === targetUsername);
-
-        if (targetUserIndex === -1) {
-            return res.status(404).json({ error: 'Пользователь не найден' });
-        }
-
-        users[targetUserIndex].balance = parseInt(newBalance);
-        writeUsers(users);
-        updateLeaders(users[targetUserIndex]);
-
-        console.log('Баланс установлен:', targetUsername, '=', newBalance);
-
-        res.json({
-            success: true,
-            message: `Баланс ${targetUsername} установлен на ${newBalance} ★`,
-            user: {
-                username: users[targetUserIndex].username,
-                balance: users[targetUserIndex].balance
-            }
-        });
-    } catch (error) {
-        console.error('Ошибка установки баланса:', error);
-        res.status(500).json({ error: 'Ошибка установки баланса' });
+    if (!req.user.isAdmin) {
+        return res.status(403).json({ error: 'Недостаточно прав' });
     }
+
+    const users = readUsers();
+    const targetUserIndex = users.findIndex(u => u.username === targetUsername);
+
+    if (targetUserIndex === -1) {
+        return res.status(404).json({ error: 'Пользователь не найден' });
+    }
+
+    users[targetUserIndex].balance = parseInt(newBalance);
+    writeUsers(users);
+    updateLeaders(users[targetUserIndex]);
+
+    res.json({
+        success: true,
+        message: `Баланс ${targetUsername} установлен на ${newBalance} ★`,
+        user: {
+            username: users[targetUserIndex].username,
+            balance: users[targetUserIndex].balance
+        }
+    });
 });
 
 // Обслуживание клиента
@@ -688,6 +564,4 @@ initializeDataFiles();
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Сервер запущен на порту ${PORT}`);
     console.log(`📱 Откройте: http://localhost:${PORT}`);
-    console.log(`🔍 API доступно по: http://localhost:${PORT}/api`);
-    console.log(`❤️  Health check: http://localhost:${PORT}/health`);
 });
